@@ -1,4 +1,4 @@
-import React , { Suspense, useEffect, useState } from "react";
+import React , { Suspense, useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, useProgress } from '@react-three/drei';
 import LdsScene from "./sections/lds";
@@ -12,7 +12,7 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing'
 
 
 
-import Home from './ui/Home'; 
+import Home from './components/ui/Home'; 
 
 export const useProgressStore = create((set) => ({
 	progress: 0,
@@ -126,7 +126,7 @@ export default function Laedx() {
 			
 				</Suspense>
 			</Canvas>
-			{/* <Home /> */}
+			<Home />
 		</>
 	);
 }

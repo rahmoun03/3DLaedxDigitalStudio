@@ -1,7 +1,9 @@
-import React, { useRef, useEffect, useState, Suspense } from "react";
+import React, { useRef, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useThree, extend} from "@react-three/fiber";
 import { MeshReflectorMaterial, MeshTransmissionMaterial, OrbitControls, useTexture, useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three'
+import { GUI } from 'dat.gui';
+
 import LiquidSphere from '../components/LiquidSphere';
 
 // shaders
@@ -23,16 +25,42 @@ import ldsFragmentShader from './shaders/lds/fragment.glsl';
 
 function Sphere() {
 
+    const geometryRef = useRef();
+    const clock = new THREE.Clock();
+    
+    useEffect(() => {
+        
+        console.log(geometryRef.current);
+        
+    }, []);
+    
+    useEffect(() => {
+        const gui = new GUI();
+        gui.add(myMaterial.uniforms.uFrequency, 'value').min(0).max(100).step(0.1).name('Frequency');
+        // gui.add(myMaterial.uniforms.uColor, 'value').min(0).max(100).step(0.1).name('Color');
+        
+    }, []);
+    
     const myMaterial = new THREE.RawShaderMaterial({
+        uniforms: {
+            uFrequency: { value : 5.0 },
+            uTime: { value : 0.0 },
+            uColor: { value : new THREE.Color('orange') },
+        },
         vertexShader: ldsVertexShader,
         fragmentShader: ldsFragmentShader,
-        wireframe: true,
+        wireframe: false,
+    })
+    
+    useFrame(() => {
+        const elapsed = clock.getElapsedTime();
+        myMaterial.uniforms.uTime.value = elapsed * 3;
     })
 
     return (
-        <mesh position={[0, 1.3, 0]} >
-            <sphereGeometry args={[1, 64, 64]} />
-            <primitive object={myMaterial} attach='material' />
+        <mesh position={[0, 1.3, 0]}  >
+            <sphereGeometry args={[1, 64, 64]} ref={geometryRef}/>
+            <primitive  object={myMaterial} attach='material' />
         </mesh>
     );
 }
@@ -116,18 +144,16 @@ function Ground() {
 function LdsScene() {
     const { camera } = useThree();
     const groupRef = useRef();
-    const [mouse, setMouse] = useState({ x: 0, y: 0 });
+    const mouse = useRef({ x: 0, y: 0 });
+
 
 
     useEffect(() => {
         const handleMouseMove = (e) => {
-            setMouse({
-                x: (e.clientX / window.innerWidth) * 2 - 1, 
-                y: -(e.clientY / window.innerHeight) * 2 + 1
-            });
-            // console.log("x : ",(e.clientX / window.innerWidth) * 2 - 1);
-            // console.log("y : ",-(e.clientY / window.innerHeight) * 2 + 1);
+            mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
         };
+
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
@@ -135,11 +161,13 @@ function LdsScene() {
     // Smooth rotation
     useFrame(() => {
         if (groupRef.current) {
-            groupRef.current.rotation.y += (mouse.x * 0.2 - groupRef.current.rotation.y) * 0.02;
-            groupRef.current.rotation.x += (mouse.y * 0.1 - groupRef.current.rotation.x) * 0.01;
+            groupRef.current.rotation.y += (mouse.current.x * 0.2 - groupRef.current.rotation.y) * 0.02;
+            groupRef.current.rotation.x += (mouse.current.y * 0.1 - groupRef.current.rotation.x) * 0.01;
         }
         camera.lookAt(0, 1.3, 0)
     });
+
+
 
     return (
         <group ref={groupRef}>

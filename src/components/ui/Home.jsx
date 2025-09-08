@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import LdsContent from "./components/LdsContent";
 import HiveContent from "./components/HiveContent";
 import NoveContent from "./components/NoveContent";
-import { useSections } from "../Laedx";
+import { useSections } from "../../Laedx";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function Home() {

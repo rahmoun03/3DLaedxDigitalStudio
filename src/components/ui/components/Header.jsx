@@ -1,6 +1,6 @@
 import { color } from "framer-motion";
 import { ChevronsLeft } from "lucide-react";
-import { useSections } from "../../Laedx";
+import { useSections } from "../../../Laedx";
 
 export default function Header() {
 
