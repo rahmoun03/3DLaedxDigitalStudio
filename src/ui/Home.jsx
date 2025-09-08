@@ -1,0 +1,37 @@
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import LdsContent from "./components/LdsContent";
+import HiveContent from "./components/HiveContent";
+import NoveContent from "./components/NoveContent";
+import { useSections } from "../Laedx";
+import { AnimatePresence, motion } from "framer-motion";
+
+export default function Home() {
+	const { products } = useSections();
+
+	const activeProduct = products.find((p) => p.active)?.name;
+
+	const sectionsMap = {
+		Home: <LdsContent />,
+		HiveXperience: <HiveContent />,
+		NoveXperience: <NoveContent />,
+	};
+
+	return (
+		<section className="fixed top-0 left-0 w-screen h-screen flex flex-col p-4 justify-between overflow-hidden">
+			<Header />
+
+			<div className="flex-1 flex items-center justify-center relative w-full h-full">
+				<AnimatePresence mode="wait">
+					<motion.div
+						key={activeProduct} 
+					>
+						{sectionsMap[activeProduct] || null}
+					</motion.div>
+				</AnimatePresence>
+			</div>
+
+			<Footer />
+		</section>
+	);
+}
