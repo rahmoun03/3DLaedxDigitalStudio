@@ -4,11 +4,15 @@ import { MeshReflectorMaterial, useTexture } from '@react-three/drei';
 import * as THREE from 'three'
 
 
-import GalaxyBall from '../components/GalaxyBall';
-import CubeHDRI from '../components/CubeHDRI';
-import LiquidSphere from '../components/LiquidSphere';
+// import GalaxyBall from '../components/GalaxyBall';
+// import CubeHDRI from '../components/CubeHDRI';
+// import LiquidSphere from '../components/LiquidSphere';
+import GlassOuter from '../components/GlassOuter';
 
 
+//GLSL
+import noveVertex from "./shaders/nove/vertex.glsl";
+import noveFragment from "./shaders/nove/fragment.glsl";
 
 function Stars({ count = 2000, radius = 100, innerRadius = 10 }) {
 
@@ -74,20 +78,36 @@ function Stars({ count = 2000, radius = 100, innerRadius = 10 }) {
 // }
 
 
+
+
 function Sphere() {
 
+	const clock = new THREE.Clock();
+	const meshRef = useRef();
+	const GalaxyMaterial = new THREE.ShaderMaterial({
+		uniforms : { 
+			u_time: { value: 0 } ,
+			u_tintA: { value: new THREE.Color('#7a5cff') },
+			u_tintB: { value: new THREE.Color('#00e5ff') },
+		},
+		transparent : false,
+		depthWrite : true,
+		side : THREE.FrontSide,
+		vertexShader : noveVertex,
+		fragmentShader : noveFragment
+	});
+
+	useFrame(() => {
+	  	GalaxyMaterial.uniforms.u_time.value = clock.getElapsedTime() / 3;
+	});
 
 	return (
-		<mesh  position={[0, 1.3, 0]} >
-		<sphereGeometry args={[1, 64, 64]}  />
-		<meshStandardMaterial 
-			wireframe={true}
-			metalness={0.8}
-			roughness={5}
-			color="#3ae1ff"
-			emissive="#3ae1ff" 
-			emissiveIntensity={1} 
-		/>
+		<mesh
+			ref={meshRef}
+			position={[0, 1.3, 0]} 
+		>
+			<sphereGeometry args={[1, 64, 64]}  />
+			<primitive object={GalaxyMaterial} attach='material' />
 		</mesh>
 	);
 }
@@ -198,7 +218,8 @@ function NoveScene() {
 
 	return (
 		<group ref={groupRef}>
-			<Sphere />
+			<GlassOuter useCubeCam />
+			{/* <Sphere /> */}
 			{/* <LiquidSphere /> */}
 			{/* <GalaxyBall /> */}
 			<Ground />

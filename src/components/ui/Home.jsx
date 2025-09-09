@@ -22,9 +22,10 @@ export default function Home() {
 			<Header />
 
 			<div className="flex-1 flex items-center justify-center relative w-full h-full">
-				<AnimatePresence mode="wait">
+				<AnimatePresence mode="wait" className='h-full'>
 					<motion.div
 						key={activeProduct} 
+						className='h-full'
 					>
 						{sectionsMap[activeProduct] || null}
 					</motion.div>

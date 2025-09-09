@@ -28,38 +28,32 @@ function Sphere() {
     const geometryRef = useRef();
     const clock = new THREE.Clock();
     
-    useEffect(() => {
-        
-        console.log(geometryRef.current);
-        
-    }, []);
-    
-    useEffect(() => {
-        const gui = new GUI();
-        gui.add(myMaterial.uniforms.uFrequency, 'value').min(0).max(100).step(0.1).name('Frequency');
-        // gui.add(myMaterial.uniforms.uColor, 'value').min(0).max(100).step(0.1).name('Color');
-        
-    }, []);
-    
-    const myMaterial = new THREE.RawShaderMaterial({
+    const myMaterial = new THREE.ShaderMaterial({
         uniforms: {
-            uFrequency: { value : 5.0 },
+            iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            uFrequency: { value : 3.0 },
             uTime: { value : 0.0 },
-            uColor: { value : new THREE.Color('orange') },
+            uColor: { value : new THREE.Color('#F7EFC5') },
+            uColor1: { value: new THREE.Vector3(0.5, 0.5, 0.5) },
+            uColor2: { value: new THREE.Vector3(0.5, 0.5, 0.5) },
+            uColor3: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
+            uColor4: { value: new THREE.Vector3(0.263, 0.416, 0.557) },
         },
         vertexShader: ldsVertexShader,
         fragmentShader: ldsFragmentShader,
         wireframe: false,
+        side: THREE.DoubleSide
     })
     
     useFrame(() => {
         const elapsed = clock.getElapsedTime();
-        myMaterial.uniforms.uTime.value = elapsed * 3;
+        myMaterial.uniforms.uTime.value = elapsed;
     })
 
     return (
-        <mesh position={[0, 1.3, 0]}  >
-            <sphereGeometry args={[1, 64, 64]} ref={geometryRef}/>
+        <mesh position={[0, 1.3, 0]}  rotation={[0.0, Math.PI/2, 0.0]} >
+            {/* <planeGeometry args={[3, 2, 720, 720]} ref={geometryRef}/> */}
+            <sphereGeometry args={[1, 720, 720]} ref={geometryRef}/>
             <primitive  object={myMaterial} attach='material' />
         </mesh>
     );

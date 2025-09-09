@@ -59,13 +59,14 @@ function Bee({ scene, animations, animation, id, ...props }) {
 			if(mouse.y <= -0.70) mouse.y = -0.70;
 			if(mouse.y >= 0.70) mouse.y = 0.70;
 			
+			// console.log(' Mouse cood : ', mouse.x, mouse.y);
 		};
 
 		window.addEventListener("mousemove", handleMouseMove);
 		return () => window.removeEventListener("mousemove", handleMouseMove);
 	}, []);
 
-	useFrame((state, delta) => {
+	useFrame(() => {
 		if (id === 1) {
 			raycaster.setFromCamera(mouse, camera);
 			raycaster.ray.intersectPlane(plane, intersectionPoint);
@@ -83,7 +84,7 @@ function Bee({ scene, animations, animation, id, ...props }) {
 			<primitive ref={group} object={clone} {...props} />
 			<mesh
 				// rotation={[-Math.PI / 2, 0, 0]}
-				position={[0, 5, 0.8]}
+				position={[0, 5.8, 0.8]}
 				// onPointerMove={handleMouseMove}
 				visible={false}
 			>

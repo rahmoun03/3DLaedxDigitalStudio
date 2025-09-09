@@ -61,11 +61,11 @@ export function ResponsiveCamera() {
 		} else if (size.width < 1280) {
 			// Tablet
 			camera.position.set(0, 2, 5);
-			camera.fov = 50;
+			camera.fov = 55;
 		} else {
 			// Desktop
 			camera.position.set(0, 2, 5);
-			camera.fov = 50;
+			camera.fov = 55;
 		}
 
 		camera.updateProjectionMatrix();
@@ -77,18 +77,28 @@ export function ResponsiveCamera() {
 
 export default function Laedx() {
 
-	// const [ progress, setProgress ] = useState(0);
+	const { products } = useSections();
 
-	// useEffect(() => {
-	// 	console.log('progress : ', progress);
-		
-	// }, [progress])
+	const activeProduct = products.find((p) => p.active)?.name;
+
+	const sectionLight = {
+		Home: '#F7EFC5',
+		NoveXperience: '#D5F3FF',
+		HiveXperience: '#FFC30B',
+	};
+	
+	const sectionScene = {
+		Home: <LdsScene />,
+		NoveXperience: <NoveScene />,
+		HiveXperience: <HiveScene />,
+	};
+
 	
 	return (
 		<>
 			<LoadingPage />
 			<Canvas
-				camera={{ position: [0, 2, 5] , fov: 60 }}
+				camera={{ position: [0, 2, 5] , fov: 55 }}
 				style={{ 
 					height: '100vh', 
 					background: "#000",
@@ -105,7 +115,8 @@ export default function Laedx() {
 					<pointLight 
 						position={[0, 1.3, 0]}
 						intensity={3.5}
-						color="#F7EFC5" 
+						color={sectionLight[activeProduct] || '#f7efc5'}
+						// color="#F7EFC5" 
 						// color="#D5F3FF"
 						// color="#FFC30B"
 						castShadow
@@ -116,13 +127,13 @@ export default function Laedx() {
 						<Bloom intensity={1} luminanceThreshold={0.2} luminanceSmoothing={0.025} />
 					</EffectComposer> */}
 
-					<OrbitControls/>
+					{/* <OrbitControls/> */}
 
 					{/* Scene */}
-					<LdsScene />
+					{/* <LdsScene /> */}
 					{/* <NoveScene /> */}
 					{/* <HiveScene /> */}
-
+					{sectionScene[activeProduct]}
 			
 				</Suspense>
 			</Canvas>

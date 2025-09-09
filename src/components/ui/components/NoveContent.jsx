@@ -4,7 +4,7 @@ const NoveContent = () => {
 	
 	return (
 		<motion.section
-			className="w-full flex flex-col lg:flex-row p-2 lg:p-10 justify-between items-center text-gray-400 font-[JetBrains] mix-blending-normal"
+			className="w-full h-full flex flex-col lg:flex-row p-2 py-8 lg:p-10 justify-between items-center text-gray-400 font-[JetBrains] mix-blend-multiply"
 			initial={{ opacity: 0, y: 30 }} // Start faded & slightly down
 			animate={{ opacity: 1, y: 0 }} // Fade in & move up
 			exit={{ opacity: 0, y: -30 }} // Fade out & move up
