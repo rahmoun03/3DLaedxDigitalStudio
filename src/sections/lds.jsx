@@ -23,7 +23,7 @@ import ldsFragmentShader from './shaders/lds/fragment.glsl';
 // }
 
 
-function Sphere({active = true}) {
+function Sphere() {
 
     const geometryRef = useRef();
     const clock = new THREE.Clock();
@@ -51,7 +51,7 @@ function Sphere({active = true}) {
     })
 
     return (
-        <mesh position={active ? [0, 1.3, 0] : [0, 50, 0]}  rotation={[0.0, Math.PI/2, 0.0]} >
+        <mesh position={[0, 1.3, 0]}  rotation={[0.0, Math.PI/2, 0.0]} >
             {/* <planeGeometry args={[3, 2, 720, 720]} ref={geometryRef}/> */}
             <sphereGeometry args={[1, 720, 720]} ref={geometryRef}/>
             <primitive  object={myMaterial} attach='material' />
@@ -60,7 +60,7 @@ function Sphere({active = true}) {
 }
 
 
-function Ground({active = true}) {
+function Ground() {
 
     // const [AO, roughness, normal, baseColor, height] = useTexture([
     // 	'/Textures/Stone/Wall_Stone_025_ambientOcclusion.png',
@@ -97,7 +97,7 @@ function Ground({active = true}) {
     height.wrapS = height.wrapT = baseColor.wrapS = baseColor.wrapT = AO.wrapS = AO.wrapT = normal.wrapS = normal.wrapT = roughness.wrapS = roughness.wrapT = THREE.RepeatWrapping;
 
     return (
-        <group position={active ? [0, 0.04, 0] : [0, -50, 0]}>
+        <group>
 
             {/* mirror */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.07, 0]} receiveShadow>
@@ -135,7 +135,7 @@ function Ground({active = true}) {
     );
 }
 
-function LdsScene({active = false}) {
+function LdsScene() {
     const { camera } = useThree();
     const groupRef = useRef();
     const mouse = useRef({ x: 0, y: 0 });
@@ -148,11 +148,9 @@ function LdsScene({active = false}) {
             mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
         };
 
-        if (active) {
-            window.addEventListener("mousemove", handleMouseMove);
-        }
+        window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, [active]);
+    }, []);
 
     // Smooth rotation
     useFrame(() => {
@@ -167,9 +165,9 @@ function LdsScene({active = false}) {
 
     return (
         <group ref={groupRef}>
-            <Sphere active={active} />
+            <Sphere />
             {/* <LiquidSphere /> */}
-            <Ground active={active} />
+            <Ground />
         </group>
     );
 }

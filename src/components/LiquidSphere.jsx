@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-export default function LiquidSphere({active = false}) {
+export default function LiquidSphere() {
   const meshRef = useRef();
 
   const uniforms = useRef({
@@ -17,10 +17,8 @@ export default function LiquidSphere({active = false}) {
     uniforms.current.uTime.value += delta + 0.03;
   });
 
-  const ballPosition = active ? [0, 1.3, 0] : [0, 50, 0];
-
   return (
-    <mesh ref={meshRef} position={ballPosition} >
+    <mesh ref={meshRef} position={[0, 1.3, 0]} >
       <sphereGeometry args={[1, 128, 128]} />
       <shaderMaterial
         uniforms={uniforms.current}

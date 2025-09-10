@@ -9,7 +9,7 @@ import LiquidSphere from '../components/LiquidSphere'
 
 
 
-function BeeGroup({bees, active}) {
+function BeeGroup({bees}) {
 	const { scene, animations } = useGLTF("/3DModels/bee/source/Bee.glb");
 	
 	return (
@@ -24,14 +24,13 @@ function BeeGroup({bees, active}) {
 				position={bee.position}
 				scale={bee.scale}
 				rotation={bee.rotation}
-				active={active}
 			/>
 		))}
 		</>
 	);
 }
 
-function Bee({ scene, animations, animation, id, active, ...props }) {
+function Bee({ scene, animations, animation, id, ...props }) {
 	const group = useRef();
 	const clone = SkeletonUtils.clone(scene);
 	const { actions } = useAnimations(animations, group);
@@ -63,14 +62,12 @@ function Bee({ scene, animations, animation, id, active, ...props }) {
 			// console.log(' Mouse cood : ', mouse.x, mouse.y);
 		};
 
-		if(active) {
-			window.addEventListener("mousemove", handleMouseMove);
-			return () => window.removeEventListener("mousemove", handleMouseMove);
-		}
+		window.addEventListener("mousemove", handleMouseMove);
+		return () => window.removeEventListener("mousemove", handleMouseMove);
 	}, []);
 
 	useFrame(() => {
-		if (id === 1 && active) {
+		if (id === 1) {
 			raycaster.setFromCamera(mouse, camera);
 			raycaster.ray.intersectPlane(plane, intersectionPoint);
 
@@ -87,7 +84,7 @@ function Bee({ scene, animations, animation, id, active, ...props }) {
 			<primitive ref={group} object={clone} {...props} />
 			<mesh
 				// rotation={[-Math.PI / 2, 0, 0]}
-				position={active ? [0, 5.8, 0.8] : [0, 50, 0]}
+				position={[0, 5.8, 0.8]}
 				// onPointerMove={handleMouseMove}
 				visible={false}
 			>
@@ -118,7 +115,7 @@ function Sphere() {
 	);
 }
 
-function Ground({active}) {
+function Ground() {
 
 
 	const [AO, roughness, normal, baseColor, height, SSS] = useTexture([
@@ -149,8 +146,8 @@ function Ground({active}) {
 	height.wrapS = height.wrapT = baseColor.wrapS = baseColor.wrapT = AO.wrapS = AO.wrapT = normal.wrapS = normal.wrapT = roughness.wrapS = roughness.wrapT = THREE.RepeatWrapping;
 
 	return (
-		<group position={active ? [0, 0.04, 0] : [0, -50, 0]}>
-			<mesh rotation={[-Math.PI / 2, 0, 0]}  receiveShadow>
+		<group>
+			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]} receiveShadow>
 				<planeGeometry args={[30, 30]} />
 
 				<MeshReflectorMaterial
@@ -169,7 +166,7 @@ function Ground({active}) {
 			
 
 			{/* textures */}
-			<mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
 				<planeGeometry args={[30, 30, 720, 720]} />
 				<meshPhysicalMaterial
 					map={baseColor}
@@ -185,15 +182,15 @@ function Ground({active}) {
 	);
 }
 
-function HiveScene({active}) {
+function HiveScene() {
 
 	const { camera } = useThree();
 	const groupRef = useRef();
 	const mouse = useRef({ x: 0, y: 0 });
 	const bees = [
-		{ id: 0, animation : 0, position : active ? [0, 0, 0] : [0, 50, 0], scale: [1.3, 1.3, 1.3], rotation: [0, 0, 0]},
-		{ id: 1, animation : 1, position : active ? [0, 0.3, 3] : [0, 50, 0], scale: [0.02, 0.02, 0.02], rotation: [0, 0, 0]},
-		{ id: 2, animation : 2, position : active ? [-1.3, 0.1, 0.4] : [0, 50, 0], scale: [0.06, 0.06, 0.06], rotation: [0, Math.PI / 4, 0]},
+		{ id: 0, animation : 0, position : [0, 0, 0], scale: [1.3, 1.3, 1.3], rotation: [0, 0, 0]},
+		{ id: 1, animation : 1, position : [0, 0.3, 3], scale: [0.02, 0.02, 0.02], rotation: [0, 0, 0]},
+		{ id: 2, animation : 2, position : [-1.3, 0.1, 0.4], scale: [0.06, 0.06, 0.06], rotation: [0, Math.PI / 4, 0]},
 	]
 
 	useEffect(() => {
@@ -204,7 +201,7 @@ function HiveScene({active}) {
 
 		window.addEventListener("mousemove", handleMouseMove);
 		return () => window.removeEventListener("mousemove", handleMouseMove);
-	}, [active]);
+	}, []);
 
 
 	// Smooth rotation
@@ -219,11 +216,11 @@ function HiveScene({active}) {
 	return (
 		<group ref={groupRef}>
 			{/* <Sphere /> */}
-			<LiquidSphere active={active}/>
+			<LiquidSphere />
 			<Suspense fallback={null}>
-				<BeeGroup bees={bees} active={active} />
+				<BeeGroup bees={bees} />
 			</Suspense>
-			<Ground active={active} />
+			<Ground />
 		</group>
 	);
 }

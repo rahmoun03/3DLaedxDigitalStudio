@@ -14,7 +14,7 @@ import GlassOuter from '../components/GlassOuter';
 import noveVertex from "./shaders/nove/vertex.glsl";
 import noveFragment from "./shaders/nove/fragment.glsl";
 
-function Stars({ count = 2000, radius = 100, innerRadius = 10, active }) {
+function Stars({ count = 2000, radius = 100, innerRadius = 10 }) {
 
 	const alphaMap = useTexture('/Textures/kenney_particle-pack/PNG (Transparent)/star_07.png')
 
@@ -37,25 +37,25 @@ function Stars({ count = 2000, radius = 100, innerRadius = 10, active }) {
 	}, [count, radius, innerRadius]);
 
 	return (
-		<points visible={active}>
-			<bufferGeometry>
-				<bufferAttribute
-					attach="attributes-position"
-					count={stars.length / 3}
-					array={stars}
-					itemSize={3}
-				/>
-			</bufferGeometry>
-			<pointsMaterial
-				color="#D5F3FF"
-				size={1}
-				sizeAttenuation
-				emissive='#D5F3FF'
-				emissiveIntensity={3}
-				depthWrite={false}
-				transparent
-				alphaMap={alphaMap}
+		<points>
+		<bufferGeometry>
+			<bufferAttribute
+				attach="attributes-position"
+				count={stars.length / 3}
+				array={stars}
+				itemSize={3}
 			/>
+		</bufferGeometry>
+		<pointsMaterial
+			color="#D5F3FF"
+			size={1}
+			sizeAttenuation
+			emissive='#D5F3FF'
+			emissiveIntensity={3}
+			depthWrite={false}
+			transparent
+			alphaMap={alphaMap}
+		/>
 		</points>
 	);
 }
@@ -80,7 +80,7 @@ function Stars({ count = 2000, radius = 100, innerRadius = 10, active }) {
 
 
 
-function Sphere({active = true}) {
+function Sphere() {
 
 	const clock = new THREE.Clock();
 	const meshRef = useRef();
@@ -104,7 +104,7 @@ function Sphere({active = true}) {
 	return (
 		<mesh
 			ref={meshRef}
-			position={active ? [0, 1.3, 0] : [0, 50, 0]} 
+			position={[0, 1.3, 0]} 
 		>
 			<sphereGeometry args={[1, 64, 64]}  />
 			<primitive object={GalaxyMaterial} attach='material' />
@@ -112,7 +112,7 @@ function Sphere({active = true}) {
 	);
 }
 
-function Ground({active = true}) {
+function Ground() {
 
 	const [AO, roughness, normal, baseColor, height, metalic] = useTexture([
 		'/Textures/scifi/Sci-fi_Metal_Plate_003_ambientOcclusion.jpg',
@@ -150,7 +150,7 @@ function Ground({active = true}) {
 	height.wrapS = height.wrapT = baseColor.wrapS = baseColor.wrapT = AO.wrapS = AO.wrapT = normal.wrapS = normal.wrapT = roughness.wrapS = roughness.wrapT = THREE.RepeatWrapping;
 
 	return (
-		<group position={active ? [0, 0.04, 0] : [0, -50, 0]}>
+		<group>
 			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.089, 0]} receiveShadow>
 				<planeGeometry args={[30, 30]} />
 
@@ -188,7 +188,7 @@ function Ground({active = true}) {
 	);
 }
 
-function NoveScene({active = false}) {
+function NoveScene() {
 	const { camera } = useThree();
 	const groupRef = useRef();
 	const [mouse, setMouse] = useState({ x: 0, y: 0 });
@@ -205,7 +205,7 @@ function NoveScene({active = false}) {
 		};
 		window.addEventListener("mousemove", handleMouseMove);
 		return () => window.removeEventListener("mousemove", handleMouseMove);
-	}, [active]);
+	}, []);
 
 	// Smooth rotation
 	useFrame(() => {
@@ -218,13 +218,13 @@ function NoveScene({active = false}) {
 
 	return (
 		<group ref={groupRef}>
-			<GlassOuter useCubeCam={true} hdr={null} active={active} />
-			{/* <Sphere active={active} /> */}
+			<GlassOuter useCubeCam />
+			{/* <Sphere /> */}
 			{/* <LiquidSphere /> */}
 			{/* <GalaxyBall /> */}
-			<Ground active={active} />
+			<Ground />
 			{/* <CubeHDRI file="/HDRI/HDR_rich_multi_nebulae_1.hdr"/> */}
-			<Stars innerRadius={15} active={active}/>
+			<Stars innerRadius={15}/>
 		</group>
 	);
 }
