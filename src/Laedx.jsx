@@ -88,12 +88,12 @@ export default function Laedx() {
 	};
 	
 	const sectionScene = {
-		Home: <LdsScene />,
-		NoveXperience: <NoveScene />,
-		HiveXperience: <HiveScene />,
+		Home: true,
+		NoveXperience: false,
+		HiveXperience: false,
 	};
 
-	
+
 	return (
 		<>
 			<LoadingPage />
@@ -130,10 +130,10 @@ export default function Laedx() {
 					{/* <OrbitControls/> */}
 
 					{/* Scene */}
-					{/* <LdsScene /> */}
-					{/* <NoveScene /> */}
-					{/* <HiveScene /> */}
-					{sectionScene[activeProduct]}
+					<LdsScene active={activeProduct == 'Home'}/>
+					<NoveScene active={activeProduct == 'NoveXperience'}/>
+					<HiveScene active={activeProduct == 'HiveXperience'}/>
+					{/* {sectionScene[activeProduct]} */}
 			
 				</Suspense>
 			</Canvas>

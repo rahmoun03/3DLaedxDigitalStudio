@@ -9,7 +9,7 @@ import LiquidSphere from '../components/LiquidSphere'
 
 
 
-function BeeGroup({bees}) {
+function BeeGroup({bees, active}) {
 	const { scene, animations } = useGLTF("/3DModels/bee/source/Bee.glb");
 	
 	return (
@@ -24,13 +24,14 @@ function BeeGroup({bees}) {
 				position={bee.position}
 				scale={bee.scale}
 				rotation={bee.rotation}
+				active={active}
 			/>
 		))}
 		</>
 	);
 }
 
-function Bee({ scene, animations, animation, id, ...props }) {
+function Bee({ scene, animations, animation, id, active, ...props }) {
 	const group = useRef();
 	const clone = SkeletonUtils.clone(scene);
 	const { actions } = useAnimations(animations, group);
@@ -62,12 +63,14 @@ function Bee({ scene, animations, animation, id, ...props }) {
 			// console.log(' Mouse cood : ', mouse.x, mouse.y);
 		};
 
-		window.addEventListener("mousemove", handleMouseMove);
-		return () => window.removeEventListener("mousemove", handleMouseMove);
+		if(active) {
+			window.addEventListener("mousemove", handleMouseMove);
+			return () => window.removeEventListener("mousemove", handleMouseMove);
+		}
 	}, []);
 
 	useFrame(() => {
-		if (id === 1) {
+		if (id === 1 && active) {
 			raycaster.setFromCamera(mouse, camera);
 			raycaster.ray.intersectPlane(plane, intersectionPoint);
 
@@ -84,7 +87,7 @@ function Bee({ scene, animations, animation, id, ...props }) {
 			<primitive ref={group} object={clone} {...props} />
 			<mesh
 				// rotation={[-Math.PI / 2, 0, 0]}
-				position={[0, 5.8, 0.8]}
+				position={active ? [0, 5.8, 0.8] : [0, 50, 0]}
 				// onPointerMove={handleMouseMove}
 				visible={false}
 			>
@@ -115,7 +118,7 @@ function Sphere() {
 	);
 }
 
-function Ground() {
+function Ground({active}) {
 
 
 	const [AO, roughness, normal, baseColor, height, SSS] = useTexture([
@@ -146,8 +149,8 @@ function Ground() {
 	height.wrapS = height.wrapT = baseColor.wrapS = baseColor.wrapT = AO.wrapS = AO.wrapT = normal.wrapS = normal.wrapT = roughness.wrapS = roughness.wrapT = THREE.RepeatWrapping;
 
 	return (
-		<group>
-			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]} receiveShadow>
+		<group position={active ? [0, 0.04, 0] : [0, -50, 0]}>
+			<mesh rotation={[-Math.PI / 2, 0, 0]}  receiveShadow>
 				<planeGeometry args={[30, 30]} />
 
 				<MeshReflectorMaterial
@@ -166,7 +169,7 @@ function Ground() {
 			
 
 			{/* textures */}
-			<mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+			<mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
 				<planeGeometry args={[30, 30, 720, 720]} />
 				<meshPhysicalMaterial
 					map={baseColor}
@@ -182,15 +185,15 @@ function Ground() {
 	);
 }
 
-function HiveScene() {
+function HiveScene({active}) {
 
 	const { camera } = useThree();
 	const groupRef = useRef();
 	const mouse = useRef({ x: 0, y: 0 });
 	const bees = [
-		{ id: 0, animation : 0, position : [0, 0, 0], scale: [1.3, 1.3, 1.3], rotation: [0, 0, 0]},
-		{ id: 1, animation : 1, position : [0, 0.3, 3], scale: [0.02, 0.02, 0.02], rotation: [0, 0, 0]},
-		{ id: 2, animation : 2, position : [-1.3, 0.1, 0.4], scale: [0.06, 0.06, 0.06], rotation: [0, Math.PI / 4, 0]},
+		{ id: 0, animation : 0, position : active ? [0, 0, 0] : [0, 50, 0], scale: [1.3, 1.3, 1.3], rotation: [0, 0, 0]},
+		{ id: 1, animation : 1, position : active ? [0, 0.3, 3] : [0, 50, 0], scale: [0.02, 0.02, 0.02], rotation: [0, 0, 0]},
+		{ id: 2, animation : 2, position : active ? [-1.3, 0.1, 0.4] : [0, 50, 0], scale: [0.06, 0.06, 0.06], rotation: [0, Math.PI / 4, 0]},
 	]
 
 	useEffect(() => {
@@ -201,7 +204,7 @@ function HiveScene() {
 
 		window.addEventListener("mousemove", handleMouseMove);
 		return () => window.removeEventListener("mousemove", handleMouseMove);
-	}, []);
+	}, [active]);
 
 
 	// Smooth rotation
@@ -216,11 +219,11 @@ function HiveScene() {
 	return (
 		<group ref={groupRef}>
 			{/* <Sphere /> */}
-			<LiquidSphere />
+			<LiquidSphere active={active}/>
 			<Suspense fallback={null}>
-				<BeeGroup bees={bees} />
+				<BeeGroup bees={bees} active={active} />
 			</Suspense>
-			<Ground />
+			<Ground active={active} />
 		</group>
 	);
 }
