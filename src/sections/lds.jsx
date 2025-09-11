@@ -2,8 +2,10 @@ import React, { useRef, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useThree, extend} from "@react-three/fiber";
 import { MeshReflectorMaterial, MeshTransmissionMaterial, OrbitControls, useTexture, useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three'
-import { GUI } from 'dat.gui';
+import { useProgressStore } from "../zustand/useProgressStore";
 
+
+import BeeGroup from '../components/BeeAnimation';
 import LiquidSphere from '../components/LiquidSphere';
 
 // shaders
@@ -140,6 +142,7 @@ function LdsScene() {
     const groupRef = useRef();
     const mouse = useRef({ x: 0, y: 0 });
 
+    // const { progressRightRef, progressLeftRef } = useProgressStore();
 
 
     useEffect(() => {
@@ -151,7 +154,17 @@ function LdsScene() {
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
-
+    
+    // useEffect(() => {
+    //     console.log("Right:", progressRightRef.current, "Left:", progressLeftRef.current)
+    //     if(progressRightRef.current > 50) {
+            
+    //     }
+    //     else if (progressLeftRef.current > 50) {
+            
+    //     }
+    // }, [progressRightRef.current, progressLeftRef.current]);
+    
     // Smooth rotation
     useFrame(() => {
         if (groupRef.current) {
@@ -166,6 +179,7 @@ function LdsScene() {
     return (
         <group ref={groupRef}>
             <Sphere />
+            <BeeGroup />
             {/* <LiquidSphere /> */}
             <Ground />
         </group>

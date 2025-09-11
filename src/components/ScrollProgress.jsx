@@ -1,57 +1,132 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import { useProgressStore } from "../zustand/useProgressStore";
 
-/**
- * ScrollProgress (Horizontal)
- * - Works with pointer (recommended), touch fallback, and wheel
- * - Computes progress as percentage of the viewport width (so a full-width swipe ~100%)
- * - Two independent bars: "left" (right->left swipe) and "right" (left->right swipe)
- * - Bars decay step-by-step when the user stops interacting; interacting during decay stops it and resumes progress
- *
- * Usage: import and place <ScrollProgress /> at root of your app
- */
-export default function ScrollProgress({
-  step = 6, // percent reduced each decay step
-  sensitivity = 1.0, // multiplier for how aggressive pixel->percent mapping is
-  idleDelay = 180, // ms before decay begins
-  stepDuration = 220, // ms for the width transition and wait between steps
-  max = 100,
+export default function ScrollSwipeProgress({
+	step = 10,
+	sensitivity = 0.08,
+	idleDelay = 180,
+	stepDuration = 300,
+	max = 100,
 }) {
-	const [progressLeft, setProgressLeft] = useState(0);
-	const [progressRight, setProgressRight] = useState(0);
+	const { setProgressRight, setProgressLeft, progressRightRef, progressLeftRef } = useProgressStore()
 
-	const progressLeftRef = useRef(0);
-	const progressRightRef = useRef(0);
 	const isDecayingRef = useRef(false);
 	const idleTimeoutRef = useRef(null);
-	const lastXRef = useRef(null);
-	const isPointerDownRef = useRef(false);
+	const touchStartX = useRef(0);
+	const pointerStartX = useRef(0);
 
-	// Update state + ref together
-	const setProgressValue = (dir, value) => {
-		const v = Math.max(0, Math.min(max, Number(value)));
-		if (dir === "left") {
-		progressLeftRef.current = v;
-		setProgressLeft(v);
+	const setProgressValue = (direction, value) => {
+		const clamped = Math.max(0, Math.min(max, value))
+		if (direction === "right") {
+			progressRightRef.current = clamped // updates ref for R3F
+			setProgressRight(clamped)          // optional: updates UI bar
 		} else {
-		progressRightRef.current = v;
-		setProgressRight(v);
+			progressLeftRef.current = clamped
+			setProgressLeft(clamped)
 		}
-	};
-
-	const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+	}
 
 	const cancelDecayAndIdle = () => {
 		if (idleTimeoutRef.current) {
-		clearTimeout(idleTimeoutRef.current);
-		idleTimeoutRef.current = null;
+			clearTimeout(idleTimeoutRef.current);
+			idleTimeoutRef.current = null;
 		}
 		isDecayingRef.current = false;
 	};
 
-	// Normalize pixel delta to viewport percentage
-	const deltaPxToPercent = (px) => {
-		const vw = Math.max(1, window.innerWidth || document.documentElement.clientWidth);
-		return (Math.abs(px) / vw) * 100 * sensitivity;
+	useEffect(() => {
+		// --- Wheel (desktop horizontal scroll) ---
+		const onWheel = (e) => {
+			const delta = e.deltaY || 0;
+			if (delta === 0) return;
+			const deltaPercent = Math.abs(delta) * sensitivity;
+
+			if (delta > 0) {
+				setProgressValue("right", progressRightRef.current + deltaPercent);
+				setProgressValue("left", 0);
+			} else {
+				setProgressValue("left", progressLeftRef.current + deltaPercent);
+				setProgressValue("right", 0);
+			}
+
+			resetIdleDecay();
+		};
+
+		// --- Touch events (mobile) ---
+		const onTouchStart = (e) => {
+			touchStartX.current = e.touches[0].clientX;
+			cancelDecayAndIdle();
+		};
+
+		const onTouchMove = (e) => {
+			const deltaX = e.touches[0].clientX - touchStartX.current;
+			const deltaPercent = (Math.abs(deltaX) / window.innerWidth) * 100;
+
+			if (deltaX < 0) {
+				setProgressValue("right", deltaPercent);
+				setProgressValue("left", 0);
+			} else {
+				setProgressValue("left", deltaPercent);
+				setProgressValue("right", 0);
+			}
+
+			resetIdleDecay();
+		};
+
+		const onTouchEnd = () => resetIdleDecay();
+
+		// --- Pointer events (desktop / tablets) ---
+		const onPointerDown = (e) => {
+			pointerStartX.current = e.clientX;
+			cancelDecayAndIdle();
+		};
+
+		const onPointerMove = (e) => {
+			if (pointerStartX.current === 0) return;
+			const deltaX = e.clientX - pointerStartX.current;
+			const deltaPercent = (Math.abs(deltaX) / window.innerWidth) * 100;
+
+			if (deltaX < 0) {
+				setProgressValue("right", deltaPercent);
+				setProgressValue("left", 0);
+			} else {
+				setProgressValue("left", deltaPercent);
+				setProgressValue("right", 0);
+			}
+
+			resetIdleDecay();
+		};
+
+		const onPointerUp = () => {
+		pointerStartX.current = 0;
+		resetIdleDecay();
+		};
+
+		// Attach listeners
+		window.addEventListener("wheel", onWheel, { passive: true });
+		window.addEventListener("touchstart", onTouchStart, { passive: true });
+		window.addEventListener("touchmove", onTouchMove, { passive: true });
+		window.addEventListener("touchend", onTouchEnd, { passive: true });
+		window.addEventListener("pointerdown", onPointerDown);
+		window.addEventListener("pointermove", onPointerMove);
+		window.addEventListener("pointerup", onPointerUp);
+
+		return () => {
+			window.removeEventListener("wheel", onWheel);
+			window.removeEventListener("touchstart", onTouchStart);
+			window.removeEventListener("touchmove", onTouchMove);
+			window.removeEventListener("touchend", onTouchEnd);
+			window.removeEventListener("pointerdown", onPointerDown);
+			window.removeEventListener("pointermove", onPointerMove);
+			window.removeEventListener("pointerup", onPointerUp);
+			cancelDecayAndIdle();
+		};
+	}, [sensitivity, idleDelay]);
+
+	const resetIdleDecay = () => {
+		if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
+		isDecayingRef.current = false;
+		idleTimeoutRef.current = setTimeout(() => startDecay(), idleDelay);
 	};
 
 	const startDecay = () => {
@@ -59,168 +134,41 @@ export default function ScrollProgress({
 		isDecayingRef.current = true;
 
 		(async function decayLoop() {
-		// small initial delay so UI doesn't feel jumpy
 		await wait(60);
 		while (
 			isDecayingRef.current &&
-			(progressLeftRef.current > 0 || progressRightRef.current > 0)
+			(progressRightRef.current > 0 || progressLeftRef.current > 0)
 		) {
-			if (progressLeftRef.current > 0) {
-			setProgressValue("left", Math.max(0, progressLeftRef.current - step));
-			}
-			if (progressRightRef.current > 0) {
-			setProgressValue("right", Math.max(0, progressRightRef.current - step));
-			}
-			await wait(stepDuration);
+			if (progressRightRef.current > 0)
+			setProgressValue("right", progressRightRef.current - step);
+			if (progressLeftRef.current > 0)
+			setProgressValue("left", progressLeftRef.current - step);
+			await wait(stepDuration + 80);
 		}
 		isDecayingRef.current = false;
 		})();
 	};
 
-	useEffect(() => {
-		const onWheel = (e) => {
-			console.log('you are scrolling ....');
-			
-			// Prefer horizontal deltaX. If user uses vertical wheel, ignore (since this component is horizontal-based)
-			const dy = e.deltaY;
-			if (dy === 0) return;
-			const percent = deltaPxToPercent(dy);
-			console.log("percent : ", percent);
-			if (dy > 0) {
-				setProgressValue("right", progressRightRef.current + percent);
-				setProgressValue("left", 0);
-			} else {
-				setProgressValue("left", progressLeftRef.current + percent);
-				setProgressValue("right", 0);
-			}
-			// reset idle timer
-			if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-			isDecayingRef.current = false;
-			idleTimeoutRef.current = setTimeout(() => startDecay(), idleDelay);
-		};
-
-		// Pointer handlers (works for touch & mouse where supported)
-		const onPointerDown = (e) => {
-			isPointerDownRef.current = true;
-			lastXRef.current = e.clientX;
-			cancelDecayAndIdle();
-		};
-
-		const onPointerMove = (e) => {
-			if (!isPointerDownRef.current || lastXRef.current == null) return;
-			const currentX = e.clientX;
-			const deltaX = lastXRef.current - currentX; // positive when moving left
-			lastXRef.current = currentX;
-			if (Math.abs(deltaX) < 2) return; // ignore micro-movements
-			const percent = deltaPxToPercent(deltaX);
-			if (deltaX > 0) {
-				setProgressValue("left", progressLeftRef.current + percent);
-				setProgressValue("right", 0);
-			} else {
-				setProgressValue("right", progressRightRef.current + percent);
-				setProgressValue("left", 0);
-			}
-			if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-			isDecayingRef.current = false;
-			idleTimeoutRef.current = setTimeout(() => startDecay(), idleDelay);
-		};
-
-		const onPointerUp = () => {
-			isPointerDownRef.current = false;
-			lastXRef.current = null;
-			if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-			idleTimeoutRef.current = setTimeout(() => startDecay(), idleDelay);
-		};
-
-		// Touch fallback for older browsers (use named functions so we can remove them cleanly)
-		const onTouchStart = (e) => {
-			if (e.touches && e.touches[0]) {
-				isPointerDownRef.current = true;
-				lastXRef.current = e.touches[0].clientX;
-				cancelDecayAndIdle();
-			}
-		};
-
-		const onTouchMove = (e) => {
-			if (!isPointerDownRef.current || !e.touches || !e.touches[0]) return;
-			const currentX = e.touches[0].clientX;
-			const deltaX = lastXRef.current - currentX;
-			lastXRef.current = currentX;
-			if (Math.abs(deltaX) < 2) return;
-			const percent = deltaPxToPercent(deltaX);
-			if (deltaX > 0) {
-				setProgressValue("left", progressLeftRef.current + percent);
-				setProgressValue("right", 0);
-			} else {
-				setProgressValue("right", progressRightRef.current + percent);
-				setProgressValue("left", 0);
-			}
-			if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-			isDecayingRef.current = false;
-			idleTimeoutRef.current = setTimeout(() => startDecay(), idleDelay);
-		};
-
-		const onTouchEnd = () => {
-			isPointerDownRef.current = false;
-			lastXRef.current = null;
-			if (idleTimeoutRef.current) clearTimeout(idleTimeoutRef.current);
-			idleTimeoutRef.current = setTimeout(() => startDecay(), idleDelay);
-		};
-
-		window.addEventListener("wheel", onWheel, { passive: true });
-		window.addEventListener("pointerdown", onPointerDown);
-		window.addEventListener("pointermove", onPointerMove);
-		window.addEventListener("pointerup", onPointerUp);
-
-		window.addEventListener("touchstart", onTouchStart, { passive: true });
-		window.addEventListener("touchmove", onTouchMove, { passive: true });
-		window.addEventListener("touchend", onTouchEnd, { passive: true });
-
-		return () => {
-			window.removeEventListener("wheel", onWheel);
-			window.removeEventListener("pointerdown", onPointerDown);
-			window.removeEventListener("pointermove", onPointerMove);
-			window.removeEventListener("pointerup", onPointerUp);
-
-			window.removeEventListener("touchstart", onTouchStart);
-			window.removeEventListener("touchmove", onTouchMove);
-			window.removeEventListener("touchend", onTouchEnd);
-
-			cancelDecayAndIdle();
-			};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [sensitivity, idleDelay, step, stepDuration, max]);
+	function wait(ms) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
 
 	return (
-		<>
-			{/* Stacked bars - left swipe (top) and right swipe (bottom) */}
-			<div className="fixed left-0 top-0 w-full z-50 pointer-events-none space-y-1 p-2">
-				<div className="w-full h-2 bg-black/10 rounded overflow-hidden">
-				<div
-					className="h-full"
-					style={{
-					width: `${progressLeft}%`,
-					transition: `width ${stepDuration}ms ease`,
-					background: "linear-gradient(90deg, #06b6d4, #3b82f6)",
-					}}
-				/>
-				</div>
-				<div className="w-full h-2 bg-black/10 rounded overflow-hidden">
-				<div
-					className="h-full"
-					style={{
-					width: `${progressRight}%`,
-					transition: `width ${stepDuration}ms ease`,
-					background: "linear-gradient(90deg, #f97316, #f43f5e)",
-					}}
-				/>
-				</div>
-			</div>
-
-			{/* Optional small debug percent (remove if you don't want it) */}
-			<div className="fixed right-3 top-3 z-50 select-none text-xs text-white bg-black/50 px-2 py-1 rounded">
-				L: {Math.round(progressLeft)}% • R: {Math.round(progressRight)}%
-			</div>
-		</>
+		<div className="fixed left-0 top-0 w-full h-4 z-50 flex flex-col space-y-1">
+		<div
+			className="h-1 bg-blue-500 transition-[width] ease-out"
+			style={{
+			width: `${progressRightRef.current}%`,
+			transitionDuration: `${stepDuration}ms`,
+			}}
+		/>
+		<div
+			className="h-1 bg-orange-500 transition-[width] ease-out"
+			style={{
+			width: `${progressLeftRef.current}%`,
+			transitionDuration: `${stepDuration}ms`,
+			}}
+		/>
+		</div>
 	);
 }
