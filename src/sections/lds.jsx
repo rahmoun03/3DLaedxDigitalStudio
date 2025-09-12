@@ -5,7 +5,7 @@ import * as THREE from 'three'
 import { useProgressStore } from "../zustand/useProgressStore";
 
 
-import BeeGroup from '../components/BeeAnimation';
+
 import LiquidSphere from '../components/LiquidSphere';
 
 // shaders
@@ -179,7 +179,7 @@ function LdsScene() {
     return (
         <group ref={groupRef}>
             <Sphere />
-            <BeeGroup />
+
             {/* <LiquidSphere /> */}
             <Ground />
         </group>

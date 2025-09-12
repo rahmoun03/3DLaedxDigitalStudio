@@ -6,17 +6,48 @@ import NoveContent from "./components/NoveContent";
 import ScrollProgress from '../ScrollProgress';
 import { useSections } from "../../Laedx";
 import { AnimatePresence, motion } from "framer-motion";
+import { useProgressStore } from "../../zustand/useProgressStore";
+import { useEffect } from "react";
+
+
+const BlankPage = () => {
+	
+	return (
+		<motion.section
+			className="w-full h-full"
+			initial={{ opacity: 0, y: 30 }} // Start faded & slightly down
+			animate={{ opacity: 1, y: 0 }} // Fade in & move up
+			exit={{ opacity: 0, y: -30 }} // Fade out & move up
+			transition={{ duration: 0.4, ease: "easeInOut" }}
+		>
+		</motion.section>
+	);
+}
+
 
 export default function Home() {
 	const { products } = useSections();
 
-	const activeProduct = products.find((p) => p.active)?.name;
+	let activeProduct = products.find((p) => p.active)?.name;
+	const { progressRightRef, progressLeftRef } = useProgressStore.getState()
+
 
 	const sectionsMap = {
 		Home: <LdsContent />,
 		HiveXperience: <HiveContent />,
 		NoveXperience: <NoveContent />,
+		Noting: <BlankPage />
 	};
+
+	// useEffect(() => {
+	// 	if(progressRightRef.current > 90) {
+	// 		activeProduct = 'Noting';
+	// 	}
+	// 	if(progressLeftRef.current > 90) {
+	// 		activeProduct = 'Noting';
+	// 	}
+	// }, [progressRightRef, progressLeftRef])
+
 
 	return (
 		<section className="fixed top-0 left-0 w-screen h-screen max-h-md flex flex-col p-4 justify-between overflow-hidden">
@@ -32,7 +63,6 @@ export default function Home() {
 					</motion.div>
 				</AnimatePresence>
 			</div>
-
 			<Footer />
 		</section>
 	);

@@ -3,13 +3,6 @@ import { useSections } from "../../../Laedx";
 
 export default function Header() {
 
-	const WWD = [
-		'Figma Designs',
-		'React, Three.js, Gsap',
-		'Django, Next.js',
-		'Android, iOS',
-	]
-
 	const { products, setActiveProduct } = useSections();
 
 

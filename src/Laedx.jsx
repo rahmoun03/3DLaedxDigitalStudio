@@ -8,9 +8,9 @@ import CustomCursor from './components/CustomCursor'
 
 import LoadingPage from "./Loading";
 import { create } from "zustand";
-import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
-
+import HiveTransition from './components/HiveTransition';
 
 import Home from './components/ui/Home'; 
 
@@ -111,7 +111,8 @@ export default function Laedx() {
 					<LoaderBridge />
 
 					{/* Lights */}
-					<ambientLight intensity={1} />
+					{/* <ambientLight intensity={1} /> */}
+					{/* <directionalLight position={[0, 5, 10]} color='white' /> */}
 					<pointLight 
 						position={[0, 1.3, 0]}
 						intensity={3.5}
@@ -121,7 +122,6 @@ export default function Laedx() {
 						// color="#FFC30B"
 						castShadow
 					/>
-					<directionalLight position={[0, 50, 50]} color={sectionLight[activeProduct] || '#f7efc5'} />
 
 					{/* Post bloom for the hot rim */}
 					{/* <EffectComposer>
@@ -135,7 +135,8 @@ export default function Laedx() {
 					{/* <NoveScene /> */}
 					{/* <HiveScene /> */}
 					{sectionScene[activeProduct]}
-			
+
+					<HiveTransition />
 				</Suspense>
 			</Canvas>
 			<Home />

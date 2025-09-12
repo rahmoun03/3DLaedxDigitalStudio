@@ -1,14 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import { useProgressStore } from "../zustand/useProgressStore";
+import { useSections } from "../Laedx";
 
 export default function ScrollSwipeProgress({
 	step = 10,
 	sensitivity = 0.08,
 	idleDelay = 180,
-	stepDuration = 300,
+	stepDuration = 200,
 	max = 100,
 }) {
 	const { setProgressRight, setProgressLeft, progressRightRef, progressLeftRef } = useProgressStore()
+	const { products, setActiveProduct } = useSections();
+
 
 	const isDecayingRef = useRef(false);
 	const idleTimeoutRef = useRef(null);
@@ -20,9 +23,15 @@ export default function ScrollSwipeProgress({
 		if (direction === "right") {
 			progressRightRef.current = clamped // updates ref for R3F
 			setProgressRight(clamped)          // optional: updates UI bar
+			if(clamped > 90) {
+				setActiveProduct('HiveXperience')
+			}
 		} else {
 			progressLeftRef.current = clamped
 			setProgressLeft(clamped)
+			if(clamped > 90) {
+				setActiveProduct('NoveXperience')
+			}
 		}
 	}
 
@@ -154,21 +163,21 @@ export default function ScrollSwipeProgress({
 	}
 
 	return (
-		<div className="fixed left-0 top-0 w-full h-4 z-50 flex flex-col space-y-1">
-		<div
-			className="h-1 bg-blue-500 transition-[width] ease-out"
-			style={{
-			width: `${progressRightRef.current}%`,
-			transitionDuration: `${stepDuration}ms`,
-			}}
-		/>
-		<div
-			className="h-1 bg-orange-500 transition-[width] ease-out"
-			style={{
-			width: `${progressLeftRef.current}%`,
-			transitionDuration: `${stepDuration}ms`,
-			}}
-		/>
+		<div className="fixed left-0 top-0 w-full h-4 z-50 flex flex-col space-y-1 justify-center items-center">
+			<div
+				className="h-1 bg-blue-500 transition-[width] ease-out rounded-xl"
+				style={{
+					width: `${progressRightRef.current}%`,
+					transitionDuration: `${stepDuration}ms`,
+				}}
+			/>
+			<div
+				className="h-1 bg-orange-500 transition-[width] ease-out rounded-xl"
+				style={{
+					width: `${progressLeftRef.current}%`,
+					transitionDuration: `${stepDuration}ms`,
+				}}
+			/>
 		</div>
 	);
 }
