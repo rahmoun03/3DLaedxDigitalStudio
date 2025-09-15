@@ -7,8 +7,8 @@ export default function Cloud({ position = [3, 2, 4], opacity = 1 }) {
   const group = useRef()
 
   // Load alpha textures
-  const alphaMap1 = useTexture('/Textures/cloud/alphamap.jpg')
-  const alphaMap2 = useTexture('/Textures/cloud2/alphamap.jpg')
+  const alphaMap1 = useTexture('/textures/cloud/alphamap.jpg')
+  const alphaMap2 = useTexture('/textures/cloud2/alphamap.jpg')
 
   // Reuse materials (GPU efficient)
   const materials = useMemo(() => ({
@@ -35,22 +35,22 @@ export default function Cloud({ position = [3, 2, 4], opacity = 1 }) {
     <group ref={group} position={position}>
       {/* Cloud cluster */}
       <mesh material={materials.mat1} position={[0, 0, 0]}>
-        <planeGeometry args={[3, 3]} />
+        <planeGeometry args={[2, 2]} />
       </mesh>
       <mesh material={materials.mat1} position={[2, 0, 0.2]}>
-        <planeGeometry args={[3, 3]} />
+        <planeGeometry args={[2, 2]} />
       </mesh>
       <mesh material={materials.mat2} position={[1, 0, 0.2]}>
-        <planeGeometry args={[3, 3]} />
+        <planeGeometry args={[2, 2]} />
       </mesh>
       <mesh material={materials.mat2} position={[0, 0, 0]}>
-        <planeGeometry args={[3, 3]} />
+        <planeGeometry args={[2, 2]} />
       </mesh>
       <mesh material={materials.mat2} position={[2, 0, 0.2]}>
-        <planeGeometry args={[3, 3]} />
+        <planeGeometry args={[2, 2]} />
       </mesh>
       <mesh material={materials.mat2} position={[2, 1, 0]}>
-        <planeGeometry args={[3, 3]} />
+        <planeGeometry args={[2, 2]} />
       </mesh>
     </group>
   )

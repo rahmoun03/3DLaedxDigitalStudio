@@ -3,14 +3,14 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { MeshReflectorMaterial, MeshTransmissionMaterial, OrbitControls, useTexture, useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three'
 import { SkeletonUtils } from "three-stdlib";
-import LiquidSphere from '../components/LiquidSphere'
+import LiquidSphere from '../components/three/LiquidSphere'
 
 
 
 
 
 function BeeGroup({bees}) {
-	const { scene, animations } = useGLTF("/3DModels/bee/source/Bee.glb");
+	const { scene, animations } = useGLTF("/models/bee/source/Bee.glb");
 	
 	return (
 		<>
@@ -43,7 +43,21 @@ function Bee({ scene, animations, animation, id, ...props }) {
 
 
 	useEffect(() => {
+		
 		if (actions && animations.length > 0) {
+			const anim = actions[animations[animation].name]
+	
+			if (anim?.isRunning()) {
+				console.log("The anim animation is currently playing")
+			}
+	
+			if (!anim?.isScheduled()) {
+				console.log("The anim animation has not been queued to play")
+			}
+	
+			if (anim?.paused) {
+				console.log("The anim animation is paused")
+			}
 			actions[animations[animation].name]?.play();
 		}
 	}, [actions, animations]);
@@ -119,21 +133,21 @@ function Ground() {
 
 
 	const [AO, roughness, normal, baseColor, height, SSS] = useTexture([
-	    '/Textures/Honeycomb/Honeycomb_001_ambientOcclusion.jpg',
-	    '/Textures/Honeycomb/Honeycomb_001_roughness.jpg',
-	    '/Textures/Honeycomb/Honeycomb_001_normal.jpg',
-	    '/Textures/Honeycomb/Honeycomb_001_basecolor.jpg',
-	    '/Textures/Honeycomb/Honeycomb_001_height.png',
-	    '/Textures/Honeycomb/Honeycomb_001_SSS.jpg',
+	    '/textures/Honeycomb/Honeycomb_001_ambientOcclusion.jpg',
+	    '/textures/Honeycomb/Honeycomb_001_roughness.jpg',
+	    '/textures/Honeycomb/Honeycomb_001_normal.jpg',
+	    '/textures/Honeycomb/Honeycomb_001_basecolor.jpg',
+	    '/textures/Honeycomb/Honeycomb_001_height.png',
+	    '/textures/Honeycomb/Honeycomb_001_SSS.jpg',
 	])
 
 	// const [AO, roughness, normal, baseColor, height, SSS] = useTexture([
-	// 	'/Textures/honeycomb2/Honeycomb_002_ambientOcclusion.jpg',
-	// 	'/Textures/honeycomb2/Honeycomb_002_roughness.jpg',
-	// 	'/Textures/honeycomb2/Honeycomb_002_normal.jpg',
-	// 	'/Textures/honeycomb2/Honeycomb_002_basecolor.jpg',
-	// 	'/Textures/honeycomb2/Honeycomb_002_height.png',
-	// 	'/Textures/honeycomb2/Honeycomb_002_SSS.jpg',
+	// 	'/textures/honeycomb2/Honeycomb_002_ambientOcclusion.jpg',
+	// 	'/textures/honeycomb2/Honeycomb_002_roughness.jpg',
+	// 	'/textures/honeycomb2/Honeycomb_002_normal.jpg',
+	// 	'/textures/honeycomb2/Honeycomb_002_basecolor.jpg',
+	// 	'/textures/honeycomb2/Honeycomb_002_height.png',
+	// 	'/textures/honeycomb2/Honeycomb_002_SSS.jpg',
 	// ])
 
 	normal.repeat.set(8, 8);
@@ -182,7 +196,7 @@ function Ground() {
 	);
 }
 
-function HiveScene() {
+function HiveScene({active}) {
 
 	const { camera } = useThree();
 	const groupRef = useRef();
@@ -214,7 +228,7 @@ function HiveScene() {
 	});
 
 	return (
-		<group ref={groupRef}>
+		<group ref={groupRef} visible={active} >
 			{/* <Sphere /> */}
 			<LiquidSphere />
 			<Suspense fallback={null}>

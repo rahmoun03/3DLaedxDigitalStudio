@@ -1,13 +1,12 @@
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import LdsContent from "./components/LdsContent";
-import HiveContent from "./components/HiveContent";
-import NoveContent from "./components/NoveContent";
+import Footer from "./Footer";
+import Header from "./Header";
+import LdsContent from "./LdsContent";
+import HiveContent from "./HiveContent";
+import NoveContent from "./NoveContent";
 import ScrollProgress from '../ScrollProgress';
-import { useSections } from "../../Laedx";
+import { useSections } from "@/hooks/useSectionsStore";
 import { AnimatePresence, motion } from "framer-motion";
-import { useProgressStore } from "../../zustand/useProgressStore";
-import { useEffect } from "react";
+import { useProgressStore } from "@/hooks/useProgressStore";
 
 
 const BlankPage = () => {

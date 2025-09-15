@@ -4,10 +4,10 @@ import { Clone , useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three';
 
 
-import { useProgressStore } from "../zustand/useProgressStore";
+import { useProgressStore } from "../../hooks/useProgressStore";
 
 export default function BeeGroup() {
-	const { scene, animations } = useGLTF("/3DModels/bee/source/Bee.glb");
+	const { scene, animations } = useGLTF("/models/bee/source/Bee.glb");
 
 	const direction = {
 		left : [0, 3 * Math.PI / 2, 0],

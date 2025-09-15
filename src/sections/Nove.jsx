@@ -6,8 +6,8 @@ import * as THREE from 'three'
 
 // import GalaxyBall from '../components/GalaxyBall';
 // import CubeHDRI from '../components/CubeHDRI';
-// import LiquidSphere from '../components/LiquidSphere';
-import GlassOuter from '../components/GlassOuter';
+import LiquidSphere from '../components/three/LiquidSphere';
+// import GlassOuter from '../components/GlassOuter';
 
 
 //GLSL
@@ -16,7 +16,7 @@ import noveFragment from "./shaders/nove/fragment.glsl";
 
 function Stars({ count = 2000, radius = 100, innerRadius = 10 }) {
 
-	const alphaMap = useTexture('/Textures/kenney_particle-pack/PNG (Transparent)/star_07.png')
+	const alphaMap = useTexture('/textures/kenney_particle-pack/PNG (Transparent)/star_07.png')
 
 	const stars = useMemo(() => {
 		const positions = [];
@@ -115,28 +115,28 @@ function Sphere() {
 function Ground() {
 
 	const [AO, roughness, normal, baseColor, height, metalic] = useTexture([
-		'/Textures/scifi/Sci-fi_Metal_Plate_003_ambientOcclusion.jpg',
-		'/Textures/scifi/Sci-fi_Metal_Plate_003_roughness.jpg',
-		'/Textures/scifi/Sci-fi_Metal_Plate_003_normal.jpg',
-		'/Textures/scifi/Sci-fi_Metal_Plate_003_basecolor.jpg',
-		'/Textures/scifi/Sci-fi_Metal_Plate_003_height.png',
-		'/Textures/scifi/Sci-fi_Metal_Plate_003_metallic.jpg',
+		'/textures/scifi/Sci-fi_Metal_Plate_003_ambientOcclusion.jpg',
+		'/textures/scifi/Sci-fi_Metal_Plate_003_roughness.jpg',
+		'/textures/scifi/Sci-fi_Metal_Plate_003_normal.jpg',
+		'/textures/scifi/Sci-fi_Metal_Plate_003_basecolor.jpg',
+		'/textures/scifi/Sci-fi_Metal_Plate_003_height.png',
+		'/textures/scifi/Sci-fi_Metal_Plate_003_metallic.jpg',
 	])
 	// const [AO, roughness, normal, baseColor, height, metalic] = useTexture([
-	// 	'/Textures/coins/Stylized_Coins_001_ambientOcclusion.png',
-	// 	'/Textures/coins/Stylized_Coins_001_roughness.png',
-	// 	'/Textures/coins/Stylized_Coins_001_normal.png',
-	// 	'/Textures/coins/Stylized_Coins_001_basecolor.png',
-	// 	'/Textures/coins/Stylized_Coins_001_height.png',
-	// 	'/Textures/coins/Stylized_Coins_001_metallic.png',
+	// 	'/textures/coins/Stylized_Coins_001_ambientOcclusion.png',
+	// 	'/textures/coins/Stylized_Coins_001_roughness.png',
+	// 	'/textures/coins/Stylized_Coins_001_normal.png',
+	// 	'/textures/coins/Stylized_Coins_001_basecolor.png',
+	// 	'/textures/coins/Stylized_Coins_001_height.png',
+	// 	'/textures/coins/Stylized_Coins_001_metallic.png',
 	// ])
 	// const [AO, roughness, normal, baseColor, height, metalic] = useTexture([
-	// 	'/Textures/metal/Metal_Plate_048_ambientOcclusion.jpg',
-	// 	'/Textures/metal/Metal_Plate_048_roughness.jpg',
-	// 	'/Textures/metal/Metal_Plate_048_normal.jpg',
-	// 	'/Textures/metal/Metal_Plate_048_basecolor.jpg',
-	// 	'/Textures/metal/Metal_Plate_048_height.png',
-	// 	'/Textures/metal/Metal_Plate_048_metallic.jpg',
+	// 	'/textures/metal/Metal_Plate_048_ambientOcclusion.jpg',
+	// 	'/textures/metal/Metal_Plate_048_roughness.jpg',
+	// 	'/textures/metal/Metal_Plate_048_normal.jpg',
+	// 	'/textures/metal/Metal_Plate_048_basecolor.jpg',
+	// 	'/textures/metal/Metal_Plate_048_height.png',
+	// 	'/textures/metal/Metal_Plate_048_metallic.jpg',
 	// ])
 
 
@@ -188,7 +188,7 @@ function Ground() {
 	);
 }
 
-function NoveScene() {
+function NoveScene({active}) {
 	const { camera } = useThree();
 	const groupRef = useRef();
 	const [mouse, setMouse] = useState({ x: 0, y: 0 });
@@ -217,10 +217,10 @@ function NoveScene() {
 	});
 
 	return (
-		<group ref={groupRef}>
-			<GlassOuter useCubeCam />
+		<group ref={groupRef} visible={active} >
+			{/* <GlassOuter useCubeCam /> */}
 			{/* <Sphere /> */}
-			{/* <LiquidSphere /> */}
+			<LiquidSphere />
 			{/* <GalaxyBall /> */}
 			<Ground />
 			{/* <CubeHDRI file="/HDRI/HDR_rich_multi_nebulae_1.hdr"/> */}

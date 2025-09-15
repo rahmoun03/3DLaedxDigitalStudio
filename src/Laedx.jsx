@@ -1,45 +1,23 @@
 import React , { Suspense, useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, useProgress } from '@react-three/drei';
-import LdsScene from "./sections/lds";
-import NoveScene from "./sections/Nove";
-import HiveScene from "./sections/Hive";
-import CustomCursor from './components/CustomCursor'
-
-import LoadingPage from "./Loading";
-import { create } from "zustand";
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
-import HiveTransition from './components/HiveTransition';
+
+// import LdsScene from "./sections/lds";
+// import NoveScene from "./sections/Nove";
+// import HiveScene from "./sections/Hive";
+
+import LoadingPage from "./Loading";
+import { useLoadingStore } from "@/hooks/useLoadingStore";
+import { useSections } from "@/hooks/useSectionsStore";
+import HiveTransition from './components/three/HiveTransition';
 
 import Home from './components/ui/Home'; 
 
-export const useProgressStore = create((set) => ({
-	progress: 0,
-	setProgress: (p) => set({ progress: p }),
-}));
-
-export const useSections = create((set) => ({
-
-	products: [
-		{ name: "Home", active: true },
-		{ name: "HiveXperience", active: false },
-		{ name: "NoveXperience", active: false },
-	],
-
-	setActiveProduct: (name) =>
-		set((state) => ({
-		products: state.products.map((p) => ({
-			...p,
-			active: p.name === name,
-		})),
-	})),
-}));
-
-
 export function LoaderBridge() {
 	const { progress } = useProgress();
-	const setProgress = useProgressStore((state) => state.setProgress);
+	const setProgress = useLoadingStore((state) => state.setProgress);
 
 	useEffect(() => {
 		setProgress(progress); // sync with store
@@ -74,72 +52,83 @@ export function ResponsiveCamera() {
 	return null; 
 }
 
-
-export default function Laedx() {
-
-	const { products } = useSections();
-
-	const activeProduct = products.find((p) => p.active)?.name;
+export function Lights({ activeProduct }) {
 
 	const sectionLight = {
 		Home: '#F7EFC5',
 		NoveXperience: '#D5F3FF',
 		HiveXperience: '#FFC30B',
 	};
-	
-	const sectionScene = {
-		Home: <LdsScene />,
-		NoveXperience: <NoveScene />,
-		HiveXperience: <HiveScene />,
-	};
-
 
 	return (
 		<>
-			<LoadingPage />
-			<Canvas
-				camera={{ position: [0, 2, 5] , fov: 55 }}
-				style={{ 
-					height: '100vh', 
-					background: "#000",
-				}}
-				shadows
-			>
-				{/* <LoadingPage /> */}
-				<ResponsiveCamera />
-				<Suspense fallback={null}>
-					<LoaderBridge />
-
-					{/* Lights */}
-					{/* <ambientLight intensity={1} /> */}
-					{/* <directionalLight position={[0, 5, 10]} color='white' /> */}
-					<pointLight 
-						position={[0, 1.3, 0]}
-						intensity={3.5}
-						color={sectionLight[activeProduct] || '#f7efc5'}
-						// color="#F7EFC5" 
-						// color="#D5F3FF"
-						// color="#FFC30B"
-						castShadow
-					/>
-
-					{/* Post bloom for the hot rim */}
-					{/* <EffectComposer>
-						<Bloom intensity={1} luminanceThreshold={0.2} luminanceSmoothing={0.025} />
-					</EffectComposer> */}
-
-					{/* <OrbitControls/> */}
-
-					{/* Scene */}
-					{/* <LdsScene /> */}
-					{/* <NoveScene /> */}
-					{/* <HiveScene /> */}
-					{sectionScene[activeProduct]}
-
-					<HiveTransition />
-				</Suspense>
-			</Canvas>
-			<Home />
+			{/* <ambientLight intensity={1} /> */}
+			{/* <directionalLight position={[0, 5, 10]} color='white' /> */}
+			<pointLight 
+				position={[0, 1.3, 0]}
+				intensity={3.5}
+				color={sectionLight[activeProduct] || '#f7efc5'}
+				castShadow
+			/>
 		</>
 	);
 }
+
+
+// export default function Laedx() {
+
+// 	const { products } = useSections();
+
+// 	const activeProduct = products.find((p) => p.active)?.name;
+	
+// 	// const sectionScene = {
+// 	// 	Home: <LdsScene />,
+// 	// 	NoveXperience: <NoveScene />,
+// 	// 	HiveXperience: <HiveScene />,
+// 	// };
+
+
+// 	return (
+// 		<>
+// 			<LoadingPage />
+// 			<Canvas
+// 				camera={{ position: [0, 2, 5] , fov: 55 }}
+// 				style={{ 
+// 					height: '100vh', 
+// 					background: "#000",
+// 				}}
+// 				shadows
+// 			>
+// 				<ResponsiveCamera />
+// 				<Suspense fallback={null}>
+// 					<LoaderBridge />
+
+// 					{/* Lights */}
+// 					<Lights activeProduct={activeProduct} />
+
+// 					{/* Post bloom for the hot rim */}
+// 					<EffectComposer>
+// 						<Bloom intensity={0.1} luminanceThreshold={0.2} />
+// 					</EffectComposer>
+
+// 					{/* <EffectComposer> */}
+// 						{/* <Bloom intensity={0.1} luminanceThreshold={0.2} /> */}
+// 						{/* <DepthOfField focusDistance={0.02} focalLength={0.02} bokehScale={2} /> */}
+// 						{/* <Vignette eskil={false} offset={0.1} darkness={0.8} /> */}
+// 					{/* </EffectComposer> */}
+
+// 					{/* <OrbitControls/> */}
+
+// 					{/* Scene */}
+// 					{/* <LdsScene active={activeProduct === 'Home'} />
+// 					<NoveScene active={activeProduct === 'NoveXperience'} />
+// 					<HiveScene active={activeProduct === 'HiveXperience'} /> */}
+// 					{/* {sectionScene[activeProduct]} */}
+
+// 					<HiveTransition />
+// 				</Suspense>
+// 			</Canvas>
+// 			<Home />
+// 		</>
+// 	);
+// }

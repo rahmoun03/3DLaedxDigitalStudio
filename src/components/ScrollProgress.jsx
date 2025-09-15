@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { useProgressStore } from "../zustand/useProgressStore";
-import { useSections } from "../Laedx";
+import { useProgressStore } from "@/hooks/useProgressStore";
+import { useSections } from "@/hooks/useSectionsStore";
 
 export default function ScrollSwipeProgress({
 	step = 10,
@@ -24,13 +24,17 @@ export default function ScrollSwipeProgress({
 			progressRightRef.current = clamped // updates ref for R3F
 			setProgressRight(clamped)          // optional: updates UI bar
 			if(clamped > 90) {
-				setActiveProduct('HiveXperience')
+				setTimeout(() => {
+					setActiveProduct('HiveXperience')
+				}, 5000)
 			}
 		} else {
 			progressLeftRef.current = clamped
 			setProgressLeft(clamped)
 			if(clamped > 90) {
-				setActiveProduct('NoveXperience')
+				setTimeout(() => {
+					setActiveProduct('NoveXperience')
+				}, 5000)
 			}
 		}
 	}

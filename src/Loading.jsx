@@ -1,12 +1,12 @@
 // import { Html, useProgress} from '@react-three/drei';
-import { useMemo, useState, useEffect, use } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useSpring, animated } from "@react-spring/web";
-import { useProgressStore } from './Laedx';
+import { useLoadingStore } from "@/hooks/useLoadingStore";
 
 
 
 export default function LoadingPage() {
-	const progress = useProgressStore((state) => state.progress);
+	const progress = useLoadingStore((state) => state.progress);
 	const [visible, setVisible] = useState(true);
 	const [shadow, setShadow] = useState(false);
 	const [finish, setFinish] = useState(false);

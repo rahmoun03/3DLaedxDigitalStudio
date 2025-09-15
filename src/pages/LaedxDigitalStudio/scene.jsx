@@ -2,15 +2,14 @@ import React, { useRef, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useThree, extend} from "@react-three/fiber";
 import { MeshReflectorMaterial, MeshTransmissionMaterial, OrbitControls, useTexture, useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three'
-import { useProgressStore } from "../hooks/useProgressStore";
 
 
-
-import LiquidSphere from '../components/three/LiquidSphere';
+import { useProgressStore } from "@/hooks/useProgressStore";
+import LiquidSphere from '@/components/three/LiquidSphere';
 
 // shaders
-import ldsVertexShader from './shaders/lds/vertex.glsl';
-import ldsFragmentShader from './shaders/lds/fragment.glsl';
+import ldsVertexShader from '@/shaders/lds/vertex.glsl';
+import ldsFragmentShader from '@/shaders/lds/fragment.glsl';
 
 
 function Sphere() {
@@ -75,11 +74,11 @@ function Ground() {
     // ])
 
     const [AO, roughness, normal, baseColor, height] = useTexture([
-    	'/textures/Stone2/Stone_Path_008_ambientOcclusion.jpg',
-    	'/textures/Stone2/Stone_Path_008_roughness.jpg',
-    	'/textures/Stone2/Stone_Path_008_normal.jpg',
-    	'/textures/Stone2/Stone_Path_008_basecolor.jpg',
-    	'/textures/Stone2/Stone_Path_008_height.png',
+        '/textures/Stone2/Stone_Path_008_ambientOcclusion.jpg',
+        '/textures/Stone2/Stone_Path_008_roughness.jpg',
+        '/textures/Stone2/Stone_Path_008_normal.jpg',
+        '/textures/Stone2/Stone_Path_008_basecolor.jpg',
+        '/textures/Stone2/Stone_Path_008_height.png',
     ])
 
     // const [AO, roughness, normal, baseColor, height] = useTexture([
@@ -139,7 +138,7 @@ function Ground() {
     );
 }
 
-function LdsScene({active}) {
+function HomeScene() {
     const { camera } = useThree();
     const groupRef = useRef();
     const mouse = useRef({ x: 0, y: 0 });
@@ -179,7 +178,7 @@ function LdsScene({active}) {
 
 
     return (
-        <group ref={groupRef}  visible={active} >
+        <group ref={groupRef} >
             <Sphere />
 
             {/* <LiquidSphere /> */}
@@ -189,4 +188,4 @@ function LdsScene({active}) {
 }
 
 
-export default LdsScene;
+export default HomeScene;

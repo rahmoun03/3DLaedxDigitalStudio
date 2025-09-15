@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 
-import {useProgressStore} from '../zustand/useProgressStore';
+import {useProgressStore} from '../../hooks/useProgressStore';
 
 import BeeGroup from './BeeAnimation';
 import Cloud from './Cloud';

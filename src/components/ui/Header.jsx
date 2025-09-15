@@ -1,5 +1,5 @@
 import { ChevronsLeft } from "lucide-react";
-import { useSections } from "../../../Laedx";
+import { useSections } from "@/hooks/useSectionsStore";
 
 export default function Header() {
 
