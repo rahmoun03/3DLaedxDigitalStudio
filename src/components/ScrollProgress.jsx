@@ -3,10 +3,10 @@ import { useProgressStore } from "@/hooks/useProgressStore";
 import { useSections } from "@/hooks/useSectionsStore";
 
 export default function ScrollSwipeProgress({
-	step = 10,
+	step = 1,
 	sensitivity = 0.08,
-	idleDelay = 180,
-	stepDuration = 200,
+	idleDelay = 1,
+	stepDuration = 150,
 	max = 100,
 }) {
 	const { setProgressRight, setProgressLeft, progressRightRef, progressLeftRef } = useProgressStore()

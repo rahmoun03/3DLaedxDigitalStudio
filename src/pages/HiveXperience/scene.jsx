@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, Suspense } from "react";
+import React, { useRef, useEffect, Suspense, use } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { MeshReflectorMaterial, useTexture, useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three'
@@ -44,6 +44,10 @@ function Bee({ scene, animations, animation, id, ...props }) {
     const plane = new THREE.Plane(new THREE.Vector3(0, 0, 2), -2);
     const intersectionPoint = new THREE.Vector3();
 
+    // ✅ Load color texture
+    const colorMap = useTexture("/models/bee/textures/gltf_embedded_0.png") // <-- put your texture path here
+    colorMap.encoding = THREE.sRGBEncoding
+
 
     useEffect(() => {
         
@@ -64,6 +68,18 @@ function Bee({ scene, animations, animation, id, ...props }) {
             actions[animations[animation].name]?.play();
         }
     }, [actions, animations]);
+
+
+    // ✅ Apply the color texture to all meshes
+    useEffect(() => {
+        clone.traverse((child) => {
+            if (child.isMesh) {
+                child.material.map = colorMap
+                child.material.needsUpdate = true
+            }
+        })
+    }, [clone, colorMap])
+    
 
     useEffect(() => {
 
@@ -118,15 +134,36 @@ function Bee({ scene, animations, animation, id, ...props }) {
 
 function Sphere() {
 
+    const [AO, roughness, normal, baseColor, height, SSS] = useTexture([
+        '/textures/Honeycomb/Honeycomb_001_ambientOcclusion.jpg',
+        '/textures/Honeycomb/Honeycomb_001_roughness.jpg',
+        '/textures/Honeycomb/Honeycomb_001_normal.jpg',
+        '/textures/Honeycomb/Honeycomb_001_basecolor.jpg',
+        '/textures/Honeycomb/Honeycomb_001_height.png',
+        '/textures/Honeycomb/Honeycomb_001_SSS.jpg',
+    ])
+
+    normal.repeat.set(1, 1);
+    roughness.repeat.set(1, 1);
+    AO.repeat.set(1, 1);
+    height.repeat.set(1, 1);
+    baseColor.repeat.set(1, 1);
+
+
+    height.wrapS = height.wrapT = baseColor.wrapS = baseColor.wrapT = AO.wrapS = AO.wrapT = normal.wrapS = normal.wrapT = roughness.wrapS = roughness.wrapT = THREE.RepeatWrapping;
+
+
     return (
         <mesh rotation={[0.4, 0.2, 0]} position={[0, 1.3, 0]} >
         <sphereGeometry args={[1, 64, 64]} />
-        <meshStandardMaterial 
-            // metalness={1}
-            // roughness={5}
-            color='#FFC30B'
-            emissive="#FFC30B" 
-            emissiveIntensity={2}
+        <meshPhysicalMaterial
+                    map={baseColor}
+                    normalMap={normal}
+                    roughnessMap={roughness}
+                    aoMap={AO}
+                    displacementMap={height}
+                    displacementScale={0.15}
+                    thicknessMap={SSS}
         />
         </mesh>
     );
@@ -183,7 +220,7 @@ function Ground() {
             
 
             {/* textures */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+            {/* <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
                 <planeGeometry args={[30, 30, 720, 720]} />
                 <meshPhysicalMaterial
                     map={baseColor}
@@ -194,7 +231,7 @@ function Ground() {
                     displacementScale={0.15}
                     thicknessMap={SSS}
                 />
-            </mesh>
+            </mesh> */}
         </group>
     );
 }
@@ -203,9 +240,10 @@ function HiveXperience() {
 
     const { camera } = useThree();
     const groupRef = useRef();
+    const hiveSphere = useRef();
     const mouse = useRef({ x: 0, y: 0 });
     const bees = [
-        { id: 0, animation : 0, position : [0, 0, 0], scale: [1.3, 1.3, 1.3], rotation: [0, 0, 0]},
+        // { id: 0, animation : 0, position : [0, 0, 0], scale: [1.3, 1.3, 1.3], rotation: [0, 0, 0]},
         { id: 1, animation : 1, position : [0, 0.3, 3], scale: [0.02, 0.02, 0.02], rotation: [0, 0, 0]},
         { id: 2, animation : 2, position : [-1.3, 0.1, 0.4], scale: [0.06, 0.06, 0.06], rotation: [0, Math.PI / 4, 0]},
     ]
@@ -232,11 +270,17 @@ function HiveXperience() {
 
     return (
         <group ref={groupRef} >
-            {/* <Sphere /> */}
-            <LiquidSphere />
-            <Suspense fallback={null}>
-                <BeeGroup bees={bees} />
-            </Suspense>
+            <Sphere />
+            {/* <LiquidSphere
+                ref={hiveSphere}
+                position={[0, 1.3, 0]}
+                name="hiveBall"
+                color1="#ED8C00"
+                color2="#ffb100"
+                color3="#ffff00"
+                color4="#00fffb"
+            /> */}
+            <BeeGroup bees={bees} />
             <Ground />
         </group>
     );

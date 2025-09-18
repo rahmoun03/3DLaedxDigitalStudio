@@ -17,6 +17,12 @@
 } 
 
 @font-face {
+  font-family: 'Audiowide';
+  src: url('./assets/fonts/Audiowide/Audiowide-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
   font-family: 'JetBrains';
   src: url('./assets/fonts/JetBrainsMono-2.304/fonts/variable/JetBrainsMono[wght].ttf');
   font-weight: 400;
@@ -48,6 +54,7 @@
 @theme {
 
   --font-custom : "JetBrains", "Montserrat";
+  --font-custom : "Audiowide", "Montserrat";
   --font-custom : "beba", "Montserrat";
   /* --font-custom : "Audiowide", "Montserrat"; */
 

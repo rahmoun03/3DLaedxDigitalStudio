@@ -1,7 +1,7 @@
 import { useSections } from "@/hooks/useSectionsStore";
 import HomeScene from "@/pages/LaedxDigitalStudio/scene";
 import HiveXperience from "@/pages/HiveXperience/scene";
-import NoveXperience from "@/pages/NoveXperience/scene";
+// import NoveXperience from "@/pages/NoveXperience/scene";
 
 export default function SceneManager() {
   const { products } = useSections();
@@ -12,9 +12,8 @@ export default function SceneManager() {
   
   return (
     <>
-      {activeProduct === "Home" && <HomeScene />}
-      {activeProduct === "HiveXperience" && <HiveXperience />}
-      {activeProduct === "NoveXperience" && <NoveXperience />}
+        <HomeScene />
+        {/* <HiveXperience /> */}
     </>
   )
 }

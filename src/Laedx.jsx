@@ -52,7 +52,12 @@ export function ResponsiveCamera() {
 	return null; 
 }
 
-export function Lights({ activeProduct }) {
+export function Lights() {
+
+	// const { products } = useSections();
+
+	// const activeProduct = products.find((p) => p.active)?.name;
+	const activeProduct = 'none';
 
 	const sectionLight = {
 		Home: '#F7EFC5',
@@ -63,12 +68,11 @@ export function Lights({ activeProduct }) {
 	return (
 		<>
 			{/* <ambientLight intensity={1} /> */}
-			{/* <directionalLight position={[0, 5, 10]} color='white' /> */}
+			{/* <directionalLight position={[0, 10, 10]} color='white' /> */}
 			<pointLight 
 				position={[0, 1.3, 0]}
-				intensity={3.5}
+				intensity={4.5}
 				color={sectionLight[activeProduct] || '#f7efc5'}
-				castShadow
 			/>
 		</>
 	);
