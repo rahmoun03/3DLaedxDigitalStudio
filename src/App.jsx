@@ -1,24 +1,27 @@
 
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
+// import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { useGLTF } from "@react-three/drei";
 import { OrbitControls } from "@react-three/drei";
 
+
+
+import CustomCursor from "@/components/ui/CustomCursor";
 import SceneManager from "./pages/SceneManager";
 import LoadingPage from "./Loading";
 import { ResponsiveCamera, Lights, LoaderBridge } from "./Laedx";
-import HiveTransition from "./components/three/HiveTransition";
-import ScrollSwipeProgress from "@/components/ScrollProgress";
-import Home from "./components/ui/Home";
-import ComingSoon from '@/pages/ComingSoon/index';
+// import HiveTransition from "./components/three/HiveTransition";
+import ScrollSwipeProgress from "@/components/ui/ScrollProgress";	
+// import Home from "./components/ui/Home";
 
 function App() {
 	useGLTF.preload('/models/bee/source/Bee.glb');
 
 	return (
 		<>
-			{/* <ScrollSwipeProgress />
+			<ScrollSwipeProgress />
+			<CustomCursor />
 			<LoadingPage />
 			<Canvas
 				camera={{ position: [0, 1.3, 5] , fov: 55 }}
@@ -31,15 +34,15 @@ function App() {
 					<ResponsiveCamera />
 					<LoaderBridge />
 					<Lights />
-					<OrbitControls/>
+					{/* <OrbitControls/> */}
 					<SceneManager />
 				</Suspense>
-			</Canvas> */}
+			</Canvas>
 			
 
 			{/* UI/UX */}
 			{/* <Home /> */}
-			<ComingSoon />
+			{/* <ComingSoon /> */}
 		</>
 	)
 }

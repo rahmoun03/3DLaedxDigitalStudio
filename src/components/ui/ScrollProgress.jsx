@@ -5,8 +5,8 @@ import { useSections } from "@/hooks/useSectionsStore";
 export default function ScrollSwipeProgress({
 	step = 1,
 	sensitivity = 0.08,
-	idleDelay = 1,
-	stepDuration = 150,
+	idleDelay = 0.1,
+	stepDuration = 600,
 	max = 100,
 }) {
 	const { setProgressRight, setProgressLeft, progressRightRef, progressLeftRef } = useProgressStore()
@@ -23,7 +23,8 @@ export default function ScrollSwipeProgress({
 		if (direction === "right") {
 			progressRightRef.current = clamped // updates ref for R3F
 			setProgressRight(clamped)          // optional: updates UI bar
-			if(clamped > 90) {
+			console.log('Right Progress : ', clamped);
+			if(clamped > 60) {
 				setTimeout(() => {
 					setActiveProduct('HiveXperience')
 				}, 5000)
@@ -31,7 +32,8 @@ export default function ScrollSwipeProgress({
 		} else {
 			progressLeftRef.current = clamped
 			setProgressLeft(clamped)
-			if(clamped > 90) {
+			console.log('Left Progress : ', clamped);
+			if(clamped > 60) {
 				setTimeout(() => {
 					setActiveProduct('NoveXperience')
 				}, 5000)
@@ -49,21 +51,21 @@ export default function ScrollSwipeProgress({
 
 	useEffect(() => {
 		// --- Wheel (desktop horizontal scroll) ---
-		const onWheel = (e) => {
-			const delta = e.deltaY || 0;
-			if (delta === 0) return;
-			const deltaPercent = Math.abs(delta) * sensitivity;
+		// const onWheel = (e) => {
+		// 	const delta = e.deltaY || 0;
+		// 	if (delta === 0) return;
+		// 	const deltaPercent = Math.abs(delta) * sensitivity;
 
-			if (delta > 0) {
-				setProgressValue("right", progressRightRef.current + deltaPercent);
-				setProgressValue("left", 0);
-			} else {
-				setProgressValue("left", progressLeftRef.current + deltaPercent);
-				setProgressValue("right", 0);
-			}
+		// 	if (delta > 0) {
+		// 		setProgressValue("right", progressRightRef.current + deltaPercent);
+		// 		setProgressValue("left", 0);
+		// 	} else {
+		// 		setProgressValue("left", progressLeftRef.current + deltaPercent);
+		// 		setProgressValue("right", 0);
+		// 	}
 
-			resetIdleDecay();
-		};
+		// 	resetIdleDecay();
+		// };
 
 		// --- Touch events (mobile) ---
 		const onTouchStart = (e) => {
@@ -116,7 +118,7 @@ export default function ScrollSwipeProgress({
 		};
 
 		// Attach listeners
-		window.addEventListener("wheel", onWheel, { passive: true });
+		// window.addEventListener("wheel", onWheel, { passive: true });
 		window.addEventListener("touchstart", onTouchStart, { passive: true });
 		window.addEventListener("touchmove", onTouchMove, { passive: true });
 		window.addEventListener("touchend", onTouchEnd, { passive: true });
@@ -125,7 +127,7 @@ export default function ScrollSwipeProgress({
 		window.addEventListener("pointerup", onPointerUp);
 
 		return () => {
-			window.removeEventListener("wheel", onWheel);
+			// window.removeEventListener("wheel", onWheel);
 			window.removeEventListener("touchstart", onTouchStart);
 			window.removeEventListener("touchmove", onTouchMove);
 			window.removeEventListener("touchend", onTouchEnd);
@@ -147,18 +149,19 @@ export default function ScrollSwipeProgress({
 		isDecayingRef.current = true;
 
 		(async function decayLoop() {
-		await wait(60);
-		while (
-			isDecayingRef.current &&
-			(progressRightRef.current > 0 || progressLeftRef.current > 0)
-		) {
-			if (progressRightRef.current > 0)
-			setProgressValue("right", progressRightRef.current - step);
-			if (progressLeftRef.current > 0)
-			setProgressValue("left", progressLeftRef.current - step);
-			await wait(stepDuration + 80);
-		}
-		isDecayingRef.current = false;
+			await wait(300);
+			while (
+				isDecayingRef.current &&
+				(progressRightRef.current > 0 || progressLeftRef.current > 0)
+			) {
+				if (progressRightRef.current > 0)
+					setProgressValue("right", progressRightRef.current - step);
+				if (progressLeftRef.current > 0)
+					setProgressValue("left", progressLeftRef.current - step);
+				// isDecayingRef.current = false;
+				await wait(stepDuration);
+			}
+			isDecayingRef.current = false;
 		})();
 	};
 

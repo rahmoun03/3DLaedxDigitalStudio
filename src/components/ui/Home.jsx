@@ -3,7 +3,7 @@ import Header from "./Header";
 import LdsContent from "./LdsContent";
 import HiveContent from "./HiveContent";
 import NoveContent from "./NoveContent";
-import ScrollProgress from '../ScrollProgress';
+import ScrollProgress from './ScrollProgress';
 import { useSections } from "@/hooks/useSectionsStore";
 import { AnimatePresence, motion } from "framer-motion";
 import { useProgressStore } from "@/hooks/useProgressStore";

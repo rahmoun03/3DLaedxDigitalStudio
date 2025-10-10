@@ -1,26 +1,41 @@
 import React, { useRef, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useThree, extend} from "@react-three/fiber";
-import { MeshReflectorMaterial, useTexture, useAnimations } from '@react-three/drei';
+import { MeshReflectorMaterial, useTexture, useAnimations, useGLTF } from '@react-three/drei';
 import * as THREE from 'three'
 import { EffectComposer , Bloom } from '@react-three/postprocessing';
 
 
+
+import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
+import  SupernovaExplosion  from '@/components/three/SupernovaExplosion';
 import { useProgressStore } from "@/hooks/useProgressStore";
-import LiquidSphere from '@/components/three/LiquidSphere'
+import LiquidSphere from '@/components/three/Objects/LiquidSphere';
+// import LiquidSphere from '@/components/three/LiquidSphere'
 
 // shaders
-import ldsVertexShader from '@/shaders/lds/vertex.glsl';
-import ldsFragmentShader from '@/shaders/lds/fragment.glsl';
+// import ldsVertexShader from '@/shaders/lds/vertex.glsl';
+// import ldsFragmentShader from '@/shaders/lds/fragment.glsl';
 
 
 function Sphere() {
+
 	return (
-		<mesh rotation={[0.4, 0.2, 0]} position={[0, 1.3, 0]} >
+		<mesh
+			onPointerDown={(e) => {
+				e.object.material.uInteractionStrength = 2.5
+			}}
+			rotation={[0.4, 0.2, 0]} 
+			position={[0, 1.3, 0]}
+		>
 		<sphereGeometry args={[1, 64, 64]} />
-		<meshStandardMaterial 
-			color="#F7EFC5"
-			emissive="#F7EFC5"
-			emissiveIntensity={2}
+		<HolographicMaterial
+			side={"DoubleSide"}
+			scanlineSize={10.0}
+			hologramColor="#51a4de"
+			hologramOpacity={1.0}
+			hologramBrightness={2.2}
+			signalSpeed={0.45}
+			fresnelAmount={0.45}
 		/>
 		</mesh>
 	);
@@ -153,10 +168,28 @@ function Ground() {
 	);
 }
 
+
+function HologramLogo() {
+	const {scene} = useGLTF('/models/LogoV3.glb');
+
+
+	useEffect(() => {
+		scene.traverse((child) => {
+			if(child.isMesh) {
+				child.material = HolographicMaterial;
+			}
+		})
+	}, [])
+
+	return (
+		<primitive object={scene} />
+	)
+}
+
 function HomeScene() {
-	const { camera } = useThree();
+	const { camera, size } = useThree();
 	const groupRef = useRef();
-	const bloomRef = useRef();
+	// const bloomRef = useRef();
 	const mouse = useRef({ x: 0, y: 0 });
 	const { progressRightRef, progressLeftRef } = useProgressStore();
 
@@ -179,21 +212,21 @@ function HomeScene() {
 			groupRef.current.rotation.y += (mouse.current.x * 0.2 - groupRef.current.rotation.y) * 0.02;
 			groupRef.current.rotation.x += (mouse.current.y * 0.1 - groupRef.current.rotation.x) * 0.01;
 		}
-		const t = progressRightRef.current / 100;
-		const target = new THREE.Vector3().lerpVectors(new THREE.Vector3(0, 1.3, 5), new THREE.Vector3(0, 1.3, 1), t);
-		camera.position.lerp(target, 0.05);
+		// const t = progressRightRef.current / 100;
+		// const target = new THREE.Vector3().lerpVectors(new THREE.Vector3(0, 1.3, 5), new THREE.Vector3(0, 1.3, 1), t);
+		// camera.position.lerp(target, 0.05);
 		camera.lookAt(0, 1.3, 0);
 	});
 
 	return (
 		<group ref={groupRef}>
 			<Sphere />
-			<Ground />
-
+			{/* <LiquidSphere /> */}
+			{/* <Ground /> */}
 			{/* Post bloom for the hot rim */}
-			<EffectComposer ref={bloomRef}>
+			{/* <EffectComposer ref={bloomRef}>
 				<Bloom intensity={progressRightRef.current / 100} luminanceThreshold={0.2} />
-			</EffectComposer>
+			</EffectComposer> */}
 		</group>
 	);
 }
