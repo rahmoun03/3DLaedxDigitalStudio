@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 // import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { useGLTF } from "@react-three/drei";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Stats } from "@react-three/drei";
 
 
 
@@ -18,15 +18,17 @@ import ScrollSwipeProgress from "@/components/ui/ScrollProgress";
 function App() {
 	useGLTF.preload('/models/bee/source/Bee.glb');
 
+	console.log('App called !!!')
+
 	return (
 		<>
 			<ScrollSwipeProgress />
-			<CustomCursor />
+			{/* <CustomCursor /> */}
 			<LoadingPage />
 			<Canvas
-				camera={{ position: [0, 1.3, 5] , fov: 55 }}
+				camera={{ position: [0, 0, 5] , fov: 55 }}
 				style={{ 
-					height: '100vh', 
+					height: '100dvh', 
 					background: "#000",
 				}}
 			>
@@ -36,6 +38,7 @@ function App() {
 					<Lights />
 					{/* <OrbitControls/> */}
 					<SceneManager />
+					<Stats />
 				</Suspense>
 			</Canvas>
 			

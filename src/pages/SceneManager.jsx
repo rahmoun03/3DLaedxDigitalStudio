@@ -5,16 +5,18 @@ import HiveXperience from "@/pages/HiveXperience/scene";
 // import NoveXperience from "@/pages/NoveXperience/scene";
 
 export default function SceneManager() {
-  const { products } = useSections();
+	// const { products } = useSections();
 
-  const activeProduct = products.find((p) => p.active)?.name;
+	// const activeProduct = products.find((p) => p.active)?.name;
 
-  console.log('Active Product : ', activeProduct);
-  
-  return (
-    <>
-        <HomeScene />
-        {/* <HiveXperience /> */}
-    </>
-  )
+	// console.log('Active Product : ', activeProduct);
+	
+
+	console.log('SceneManager called !!!')
+	return (
+		<>
+				<HomeScene />
+				{/* <HiveXperience /> */}
+		</>
+	)
 }

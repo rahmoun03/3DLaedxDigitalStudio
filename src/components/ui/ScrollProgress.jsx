@@ -6,7 +6,7 @@ export default function ScrollSwipeProgress({
 	step = 1,
 	sensitivity = 0.08,
 	idleDelay = 0.1,
-	stepDuration = 600,
+	stepDuration = 100,
 	max = 100,
 }) {
 	const { setProgressRight, setProgressLeft, progressRightRef, progressLeftRef } = useProgressStore()
@@ -14,32 +14,62 @@ export default function ScrollSwipeProgress({
 
 
 	const isDecayingRef = useRef(false);
+	const isAutoCompletingRef = useRef(false);
 	const idleTimeoutRef = useRef(null);
 	const touchStartX = useRef(0);
 	const pointerStartX = useRef(0);
 
 	const setProgressValue = (direction, value) => {
-		const clamped = Math.max(0, Math.min(max, value))
+		const clamped = Math.max(0, Math.min(max, value));
+	
+		if (isAutoCompletingRef.current) return; // disable updates during auto
+	
 		if (direction === "right") {
-			progressRightRef.current = clamped // updates ref for R3F
-			setProgressRight(clamped)          // optional: updates UI bar
-			console.log('Right Progress : ', clamped);
-			if(clamped > 60) {
-				setTimeout(() => {
-					setActiveProduct('HiveXperience')
-				}, 5000)
+			progressRightRef.current = clamped;
+			setProgressRight(clamped);
+	
+			if (clamped >= 60 && !isAutoCompletingRef.current) {
+				startAutoComplete("right");
 			}
 		} else {
-			progressLeftRef.current = clamped
-			setProgressLeft(clamped)
-			console.log('Left Progress : ', clamped);
-			if(clamped > 60) {
-				setTimeout(() => {
-					setActiveProduct('NoveXperience')
-				}, 5000)
+			progressLeftRef.current = clamped;
+			setProgressLeft(clamped);
+	
+			if (clamped >= 60 && !isAutoCompletingRef.current) {
+				startAutoComplete("left");
 			}
 		}
-	}
+	};
+
+	const startAutoComplete = (direction) => {
+		isAutoCompletingRef.current = true;
+		isDecayingRef.current = false; // stop decay
+	
+		let target = direction === "right" ? progressRightRef : progressLeftRef;
+		let setter = direction === "right" ? setProgressRight : setProgressLeft;
+		let oppositeSetter = direction === "right" ? setProgressLeft : setProgressRight;
+	
+		(async function autoLoop() {
+			while (target.current < 100) {
+				target.current = Math.min(100, target.current + step);
+				setter(target.current);
+				oppositeSetter(0);
+				await wait(50); // adjust for speed
+			}
+	
+			// trigger your product after reaching 100%
+			if (direction === "right") {
+				setActiveProduct("HiveXperience");
+			} else {
+				setActiveProduct("NoveXperience");
+			}
+	
+			// small delay before re-enabling input
+			await wait(1000);
+			isAutoCompletingRef.current = false;
+		})();
+	};	
+	
 
 	const cancelDecayAndIdle = () => {
 		if (idleTimeoutRef.current) {
@@ -69,14 +99,16 @@ export default function ScrollSwipeProgress({
 
 		// --- Touch events (mobile) ---
 		const onTouchStart = (e) => {
+			if (isAutoCompletingRef.current) return;
 			touchStartX.current = e.touches[0].clientX;
 			cancelDecayAndIdle();
 		};
 
 		const onTouchMove = (e) => {
+			if (isAutoCompletingRef.current) return;
 			const deltaX = e.touches[0].clientX - touchStartX.current;
 			const deltaPercent = (Math.abs(deltaX) / window.innerWidth) * 100;
-
+		
 			if (deltaX < 0) {
 				setProgressValue("right", deltaPercent);
 				setProgressValue("left", 0);
@@ -84,19 +116,21 @@ export default function ScrollSwipeProgress({
 				setProgressValue("left", deltaPercent);
 				setProgressValue("right", 0);
 			}
-
-			resetIdleDecay();
 		};
 
-		const onTouchEnd = () => resetIdleDecay();
+		const onTouchEnd = () => {
+			startDecay();
+		};
 
 		// --- Pointer events (desktop / tablets) ---
 		const onPointerDown = (e) => {
+			if (isAutoCompletingRef.current) return;
 			pointerStartX.current = e.clientX;
 			cancelDecayAndIdle();
 		};
 
 		const onPointerMove = (e) => {
+			if (isAutoCompletingRef.current) return;
 			if (pointerStartX.current === 0) return;
 			const deltaX = e.clientX - pointerStartX.current;
 			const deltaPercent = (Math.abs(deltaX) / window.innerWidth) * 100;
@@ -109,12 +143,12 @@ export default function ScrollSwipeProgress({
 				setProgressValue("right", 0);
 			}
 
-			resetIdleDecay();
+			// resetIdleDecay();
 		};
 
 		const onPointerUp = () => {
-		pointerStartX.current = 0;
-		resetIdleDecay();
+			pointerStartX.current = 0;
+			startDecay();
 		};
 
 		// Attach listeners
@@ -147,9 +181,8 @@ export default function ScrollSwipeProgress({
 	const startDecay = () => {
 		if (isDecayingRef.current) return;
 		isDecayingRef.current = true;
-
+	
 		(async function decayLoop() {
-			await wait(300);
 			while (
 				isDecayingRef.current &&
 				(progressRightRef.current > 0 || progressLeftRef.current > 0)
@@ -158,7 +191,6 @@ export default function ScrollSwipeProgress({
 					setProgressValue("right", progressRightRef.current - step);
 				if (progressLeftRef.current > 0)
 					setProgressValue("left", progressLeftRef.current - step);
-				// isDecayingRef.current = false;
 				await wait(stepDuration);
 			}
 			isDecayingRef.current = false;

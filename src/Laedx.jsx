@@ -67,72 +67,13 @@ export function Lights() {
 
 	return (
 		<>
-			<ambientLight intensity={1} />
+			<ambientLight intensity={0.1} />
 			<directionalLight position={[0, 10, 10]} color='white' />
-			<pointLight 
+			{/* <pointLight 
 				position={[0, 1.3, 0]}
 				intensity={4.5}
 				color={sectionLight[activeProduct] || '#f7efc5'}
-			/>
+			/> */}
 		</>
 	);
 }
-
-
-// export default function Laedx() {
-
-// 	const { products } = useSections();
-
-// 	const activeProduct = products.find((p) => p.active)?.name;
-	
-// 	// const sectionScene = {
-// 	// 	Home: <LdsScene />,
-// 	// 	NoveXperience: <NoveScene />,
-// 	// 	HiveXperience: <HiveScene />,
-// 	// };
-
-
-// 	return (
-// 		<>
-// 			<LoadingPage />
-// 			<Canvas
-// 				camera={{ position: [0, 2, 5] , fov: 55 }}
-// 				style={{ 
-// 					height: '100vh', 
-// 					background: "#000",
-// 				}}
-// 				shadows
-// 			>
-// 				<ResponsiveCamera />
-// 				<Suspense fallback={null}>
-// 					<LoaderBridge />
-
-// 					{/* Lights */}
-// 					<Lights activeProduct={activeProduct} />
-
-// 					{/* Post bloom for the hot rim */}
-// 					<EffectComposer>
-// 						<Bloom intensity={0.1} luminanceThreshold={0.2} />
-// 					</EffectComposer>
-
-// 					{/* <EffectComposer> */}
-// 						{/* <Bloom intensity={0.1} luminanceThreshold={0.2} /> */}
-// 						{/* <DepthOfField focusDistance={0.02} focalLength={0.02} bokehScale={2} /> */}
-// 						{/* <Vignette eskil={false} offset={0.1} darkness={0.8} /> */}
-// 					{/* </EffectComposer> */}
-
-// 					{/* <OrbitControls/> */}
-
-// 					{/* Scene */}
-// 					{/* <LdsScene active={activeProduct === 'Home'} />
-// 					<NoveScene active={activeProduct === 'NoveXperience'} />
-// 					<HiveScene active={activeProduct === 'HiveXperience'} /> */}
-// 					{/* {sectionScene[activeProduct]} */}
-
-// 					<HiveTransition />
-// 				</Suspense>
-// 			</Canvas>
-// 			<Home />
-// 		</>
-// 	);
-// }

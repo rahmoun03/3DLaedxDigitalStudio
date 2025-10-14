@@ -6,7 +6,8 @@ export const useProgressStore = create((set) => ({
 	setProgressRight: (value) => set({ progressRight: value }),
 	setProgressLeft: (value) => set({ progressLeft: value }),
 	
-	// 🔥 NEW: store refs separately (not reactive)
+
+
 	progressRightRef: { current: 0 },
 	progressLeftRef: { current: 0 },
 }))

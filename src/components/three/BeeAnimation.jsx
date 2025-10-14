@@ -14,7 +14,7 @@ export default function BeeGroup() {
 		right: [0, Math.PI / 2, 0]
 	}
 
-	const swarmSize = 80 // number of bees
+	const swarmSize = 5 
 	const bees = Array.from({ length: swarmSize }, (_, i) => {
 		return {
 			id: i.toString().padStart(2, "0"),

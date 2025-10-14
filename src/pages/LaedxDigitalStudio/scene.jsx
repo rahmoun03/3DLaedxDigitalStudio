@@ -3,8 +3,14 @@ import { Canvas, useFrame, useThree, extend} from "@react-three/fiber";
 import { MeshReflectorMaterial, useTexture, useAnimations, useGLTF } from '@react-three/drei';
 import * as THREE from 'three'
 import { EffectComposer , Bloom } from '@react-three/postprocessing';
+import { Physics } from "@react-three/rapier";
+import { RigidBody, useRapier } from "@react-three/rapier";
 
 
+
+
+import Bee from '@/components/three/Objects/Bee';
+import Rocks from '@/components/three/Objects/Rocks';
 
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
 import  SupernovaExplosion  from '@/components/three/SupernovaExplosion';
@@ -20,63 +26,39 @@ import LiquidSphere from '@/components/three/Objects/LiquidSphere';
 function Sphere() {
 
 	return (
-		<mesh
-			onPointerDown={(e) => {
-				e.object.material.uInteractionStrength = 2.5
-			}}
-			rotation={[0.4, 0.2, 0]} 
-			position={[0, 1.3, 0]}
-		>
-		<sphereGeometry args={[1, 64, 64]} />
-		<HolographicMaterial
-			side={"DoubleSide"}
-			scanlineSize={10.0}
-			hologramColor="#51a4de"
-			hologramOpacity={1.0}
-			hologramBrightness={2.2}
-			signalSpeed={0.45}
-			fresnelAmount={0.45}
-		/>
-		</mesh>
+		<RigidBody
+			colliders="ball"
+			type="dynamic" // allow physics interaction
+			restitution={0.9}
+			friction={0.4}
+			mass={3}
+	  	>
+			<group
+				onPointerDown={(e) => {
+					e.object.material.uInteractionStrength = 2.5
+				}}
+				rotation={[0.4, 0.2, 0]} 
+				position={[0, 0, 0]}
+			>
+				<mesh>
+					<sphereGeometry args={[1, 64, 64]} />
+					<HolographicMaterial
+						side={"FrontSide"}
+						scanlineSize={10.0}
+						hologramColor="#51a4de"
+						hologramOpacity={0.9}
+						fresnelOpacity={0.9}
+						hologramBrightness={2.2}
+						signalSpeed={0.45}
+						fresnelAmount={0.45}
+					/>
+				</mesh>
+				<pointLight position={[0, 0, 0]} intensity={30} color="#51a4de" />
+			</group>
+		</RigidBody>
+
 	);
 }
-
-
-// function Sphere() {
-
-//     const geometryRef = useRef();
-//     const clock = new THREE.Clock();
-	
-//     const myMaterial = new THREE.ShaderMaterial({
-//         uniforms: {
-//             iResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-//             uFrequency: { value : 3.0 },
-//             uTime: { value : 0.0 },
-//             uColor: { value : new THREE.Color('#F7EFC5') },
-//             uColor1: { value: new THREE.Vector3(0.5, 0.5, 0.5) },
-//             uColor2: { value: new THREE.Vector3(0.5, 0.5, 0.5) },
-//             uColor3: { value: new THREE.Vector3(1.0, 1.0, 1.0) },
-//             uColor4: { value: new THREE.Vector3(0.263, 0.416, 0.557) },
-//         },
-//         vertexShader: ldsVertexShader,
-//         fragmentShader: ldsFragmentShader,
-//         wireframe: false,
-//         side: THREE.DoubleSide
-//     })
-	
-//     useFrame(() => {
-//         const elapsed = clock.getElapsedTime();
-//         myMaterial.uniforms.uTime.value = elapsed;
-//     })
-
-//     return (
-//         <mesh position={[0, 1.3, 0]}  rotation={[0.0, Math.PI/2, 0.0]} >
-//             {/* <planeGeometry args={[3, 2, 720, 720]} ref={geometryRef}/> */}
-//             <sphereGeometry args={[1, 720, 720]} ref={geometryRef}/>
-//             <primitive  object={myMaterial} attach='material' />
-//         </mesh>
-//     );
-// }
 
 
 function Ground() {
@@ -187,45 +169,34 @@ function HologramLogo() {
 }
 
 function HomeScene() {
+
+	console.log('Home Scene called !!!')
+
+
 	const { camera, size } = useThree();
 	const groupRef = useRef();
-	// const bloomRef = useRef();
-	const mouse = useRef({ x: 0, y: 0 });
+
+
+
 	const { progressRightRef, progressLeftRef } = useProgressStore();
 
-	const HiveStart = new THREE.Vector3(9, 1.3, 0);
-	const NoveStart = new THREE.Vector3(-9, 1.3, 0);
-
-	useEffect(() => {
-		const handleMouseMove = (e) => {
-			mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-			mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
-		};
-
-		window.addEventListener("mousemove", handleMouseMove);
-		return () => window.removeEventListener("mousemove", handleMouseMove);
-	}, []);
-
 	useFrame(() => {
-		// Smooth rotation
-		if (groupRef.current) {
-			groupRef.current.rotation.y += (mouse.current.x * 0.2 - groupRef.current.rotation.y) * 0.02;
-			groupRef.current.rotation.x += (mouse.current.y * 0.1 - groupRef.current.rotation.x) * 0.01;
-		}
-		// const t = progressRightRef.current / 100;
-		// const target = new THREE.Vector3().lerpVectors(new THREE.Vector3(0, 1.3, 5), new THREE.Vector3(0, 1.3, 1), t);
-		// camera.position.lerp(target, 0.05);
-		camera.lookAt(0, 1.3, 0);
-	});
+		camera.lookAt(0, 0, 0);
+	})
 
 	return (
 		<group ref={groupRef}>
-			<Sphere />
+			<Physics gravity={[0, 0, 0]}>
+				<Sphere />
+				<Bee scale={[0.02, 0.02, 0.02]} position={[0, 0, -2]}/>
+				<Rocks rockCount={30} />
+			</Physics>
+
 			{/* <LiquidSphere /> */}
 			{/* <Ground /> */}
 			{/* Post bloom for the hot rim */}
-			{/* <EffectComposer ref={bloomRef}>
-				<Bloom intensity={progressRightRef.current / 100} luminanceThreshold={0.2} />
+			{/* <EffectComposer >
+				<Bloom intensity={0.1} luminanceThreshold={0.2} />
 			</EffectComposer> */}
 		</group>
 	);
