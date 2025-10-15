@@ -27,7 +27,7 @@ export default function Header() {
 					<span className="text-white" >ground floor, Laedx digital studio, </span>
 					<span className="text-white" >Bd Allal Al Fassi, Marrakech 40000</span>
 				</div>
-				<div className="flex flex-col justify-start items-end">
+				<div className="flex flex-col justify-start items-end pointer-events-auto">
 					{products.map((product, index) => (
 						<div
 							key={index}

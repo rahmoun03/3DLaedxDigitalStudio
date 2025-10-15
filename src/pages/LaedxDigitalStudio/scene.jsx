@@ -11,16 +11,35 @@ import { RigidBody, useRapier } from "@react-three/rapier";
 
 import Bee from '@/components/three/Objects/Bee';
 import Rocks from '@/components/three/Objects/Rocks';
+import HexSphere from '@/components/three/Objects/HexSphere';
 
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
-import  SupernovaExplosion  from '@/components/three/SupernovaExplosion';
+import '@/components/three/materials/DissolveMaterial';
 import { useProgressStore } from "@/hooks/useProgressStore";
-import LiquidSphere from '@/components/three/Objects/LiquidSphere';
-// import LiquidSphere from '@/components/three/LiquidSphere'
 
-// shaders
-// import ldsVertexShader from '@/shaders/lds/vertex.glsl';
-// import ldsFragmentShader from '@/shaders/lds/fragment.glsl';
+
+function DissolveSphere({ progress = 0 }) {
+	const matRef = useRef();
+
+	useFrame(() => {
+	  if (matRef.current) {
+		matRef.current.uProgress = THREE.MathUtils.clamp(progress / 100, 0, 1);
+	  }
+	});
+  
+	return (
+	  <RigidBody colliders="ball" type="dynamic" restitution={0.9} friction={0.4} mass={3}>
+		<group rotation={[0.4, 0.2, 0]} position={[0, 0, 0]}>
+		  <mesh>
+			<sphereGeometry args={[1, 128, 128]} />
+			<dissolveMaterial ref={matRef} />
+		  </mesh>
+		  <pointLight position={[0, 0, 0]} intensity={25} color="#51a4de" />
+		</group>
+	  </RigidBody>
+	);
+}
+
 
 
 function Sphere() {
@@ -62,7 +81,7 @@ function Sphere() {
 
 
 function Ground() {
-	const { progressRightRef, progressLeftRef } = useProgressStore();
+	// const { progressRightRef, progressLeftRef } = useProgressStore();
 	const groupRef = useRef();
 
 	// const [AO, roughness, normal, baseColor, height] = useTexture([
@@ -189,7 +208,9 @@ function HomeScene() {
 			<Physics gravity={[0, 0, 0]}>
 				<Sphere />
 				<Bee scale={[0.02, 0.02, 0.02]} position={[0, 0, -2]}/>
-				<Rocks rockCount={30} />
+				<Rocks rockCount={60} radius={2} />
+				{/* <DissolveSphere progress={progressRightRef.current} /> */}
+				{/* <HexSphere radius={2} hexCount={900} color="#FF5500" /> */}
 			</Physics>
 
 			{/* <LiquidSphere /> */}

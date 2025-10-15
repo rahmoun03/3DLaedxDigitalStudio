@@ -1,19 +1,20 @@
 
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-// import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { useGLTF } from "@react-three/drei";
 import { OrbitControls, Stats } from "@react-three/drei";
 
 
 
-import CustomCursor from "@/components/ui/CustomCursor";
 import SceneManager from "./pages/SceneManager";
 import LoadingPage from "./Loading";
 import { ResponsiveCamera, Lights, LoaderBridge } from "./Laedx";
-// import HiveTransition from "./components/three/HiveTransition";
 import ScrollSwipeProgress from "@/components/ui/ScrollProgress";	
-// import Home from "./components/ui/Home";
+
+
+// UI
+import LaedxDigitalStudioUI from "./pages/LaedxDigitalStudio/index";
+
 
 function App() {
 	useGLTF.preload('/models/bee/source/Bee.glb');
@@ -38,12 +39,13 @@ function App() {
 					<Lights />
 					{/* <OrbitControls/> */}
 					<SceneManager />
-					<Stats />
+					{/* <Stats /> */}
 				</Suspense>
 			</Canvas>
 			
 
 			{/* UI/UX */}
+			<LaedxDigitalStudioUI />
 			{/* <Home /> */}
 			{/* <ComingSoon /> */}
 		</>

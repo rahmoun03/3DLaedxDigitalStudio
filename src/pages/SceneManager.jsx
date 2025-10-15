@@ -15,8 +15,8 @@ export default function SceneManager() {
 	console.log('SceneManager called !!!')
 	return (
 		<>
-				<HomeScene />
-				{/* <HiveXperience /> */}
+			<HomeScene />
+			{/* <HiveXperience /> */}
 		</>
 	)
 }

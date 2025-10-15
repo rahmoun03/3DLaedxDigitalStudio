@@ -1,4 +1,3 @@
-// import { Html, useProgress} from '@react-three/drei';
 import { useMemo, useState, useEffect } from 'react';
 import { useSpring, animated } from "@react-spring/web";
 import { useLoadingStore } from "@/hooks/useLoadingStore";
@@ -29,12 +28,6 @@ export default function LoadingPage() {
 		console.log('Visible now is : ', !visible ? 'enabled' : 'disabled');
 		console.log('progress now is : ', progress);
 
-		// if(progress >= 100 && shadow)
-		// {
-		// 	const ti = setTimeout(() => {
-
-		// 	}, 1000)
-		// }
 	}, [visible, progress])
 
 	return (
