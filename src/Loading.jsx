@@ -36,7 +36,7 @@ export default function LoadingPage() {
 				zIndex: 9999,
 				transition: 'opacity 2500ms linear'
 			}}
-			className={`${finish ? 'hidden' : 'flex'} ${visible ? 'opacity-100' : 'opacity-0'} fixed top-0 left-0 w-screen h-screen bg-black`}
+			className={`${finish ? 'hidden' : 'flex'} ${visible ? 'opacity-100' : 'opacity-0'} fixed top-0 left-0 w-screen h-dvh bg-black`}
 		>
 			<div
 				className={`w-full h-full flex justify-center items-center`}

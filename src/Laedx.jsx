@@ -67,7 +67,7 @@ export function Lights() {
 
 	return (
 		<>
-			<ambientLight intensity={0.2} />
+			{/* <ambientLight intensity={0.2} /> */}
 			<pointLight position={[0, 0, 6]} intensity={8} color='white' />
 			{/* <pointLight 
 				position={[0, 1.3, 0]}

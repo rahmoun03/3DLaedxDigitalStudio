@@ -16,6 +16,7 @@ import HexSphere from '@/components/three/Objects/HexSphere';
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
 import '@/components/three/materials/DissolveMaterial';
 import { useProgressStore } from "@/hooks/useProgressStore";
+import useShake  from "@/hooks/useShake";
 
 
 function DissolveSphere({ progress = 0 }) {
@@ -190,6 +191,7 @@ function HologramLogo() {
 function HomeScene() {
 
 	console.log('Home Scene called !!!')
+	// window.alert('aaaaaaaaaaaaaa');
 
 
 	const { camera, size } = useThree();
@@ -202,6 +204,11 @@ function HomeScene() {
 	useFrame(() => {
 		camera.lookAt(0, 0, 0);
 	})
+
+
+	useShake(() => {
+		window.alert("You shook your phone! 🎉");
+	}, 2500);
 
 	return (
 		<group ref={groupRef}>

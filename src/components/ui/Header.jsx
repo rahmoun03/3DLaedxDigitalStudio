@@ -11,9 +11,10 @@ export default function Header() {
 
 			{/* logo + email       */}
 			<div className="flex flex-row items-start text-left gap-30 items-start justify-start ">
-				<h1 className="text-white text-xl sm:text-2xl lg:text-3xl flex items-center justify-center font-[AudioWide]">
+				{/* <h1 className="text-white text-xl sm:text-2xl lg:text-3xl flex items-center justify-center font-[AudioWide]">
 					<span className="">LDS</span>
-				</h1>
+				</h1> */}
+				<img src="/logo/LdsLogo.png" className="h-12" alt="" />
 				<div className="hidden lg:flex flex-col">
 					<span>contact us</span>
 					<span className="text-white" >Contact@laedxdigitalstudio.com</span>
