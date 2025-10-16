@@ -28,7 +28,7 @@ export default function useShake(onShake, threshold = 15) {
               diffTime) *
             10000;
 
-          console.log(`📊 Speed: ${speed.toFixed(2)}`); // debug log
+        //   console.log(`📊 Speed: ${speed.toFixed(2)}`); // debug log
 
           if (speed > threshold) {
             console.log("💥 Shake detected!");

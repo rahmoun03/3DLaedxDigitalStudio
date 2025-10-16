@@ -22,6 +22,13 @@
   font-weight: 400;
 }
 
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
+  font-weight: 400;
+}
+
 @font-face {
   font-family: 'JetBrains';
   src: url('./assets/fonts/JetBrainsMono-2.304/fonts/variable/JetBrainsMono[wght].ttf');
@@ -57,7 +64,7 @@
   --font-custom : "JetBrains", "Montserrat";
   --font-custom : "Audiowide", "Montserrat";
   --font-custom : "beba", "Montserrat";
-  /* --font-custom : "Audiowide", "Montserrat"; */
+  --font-custom : "Montserrat", "Montserrat";
 
 
   --color-secondary-50: #e6e9f0;

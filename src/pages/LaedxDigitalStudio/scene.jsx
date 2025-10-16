@@ -48,7 +48,7 @@ function Sphere() {
 	return (
 		<RigidBody
 			colliders="ball"
-			type="dynamic" // allow physics interaction
+			type="fixed" // allow physics interaction
 			restitution={0.9}
 			friction={0.4}
 			mass={3}
@@ -206,16 +206,16 @@ function HomeScene() {
 	})
 
 
-	useShake(() => {
-		window.alert("You shook your phone! 🎉");
-	}, 2500);
+	// useShake(() => {
+	// 	window.alert("You shook your phone! 🎉");
+	// }, 2500);
 
 	return (
 		<group ref={groupRef}>
 			<Physics gravity={[0, 0, 0]}>
 				<Sphere />
 				<Bee scale={[0.02, 0.02, 0.02]} position={[0, 0, -2]}/>
-				<Rocks rockCount={60} radius={2} />
+				<Rocks rockCount={60} radius={1.5} />
 				{/* <DissolveSphere progress={progressRightRef.current} /> */}
 				{/* <HexSphere radius={2} hexCount={900} color="#FF5500" /> */}
 			</Physics>
