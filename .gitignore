@@ -9,6 +9,7 @@ lerna-debug.log*
 
 
 public
+cert
 node_modules
 dist
 dist-ssr
