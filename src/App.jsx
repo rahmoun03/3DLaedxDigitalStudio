@@ -23,7 +23,7 @@ function App() {
 
 	return (
 		<>
-			<ScrollSwipeProgress />
+			{/* <ScrollSwipeProgress /> */}
 			{/* <CustomCursor /> */}
 			<LoadingPage />
 			<Canvas
@@ -37,7 +37,7 @@ function App() {
 					<ResponsiveCamera />
 					<LoaderBridge />
 					<Lights />
-					{/* <OrbitControls/> */}
+					<OrbitControls maxZoom={3} />
 					<SceneManager />
 					{/* <Stats /> */}
 				</Suspense>

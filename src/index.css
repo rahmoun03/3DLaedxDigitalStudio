@@ -20,6 +20,7 @@
   font-family: 'Audiowide';
   src: url('./assets/fonts/Audiowide/Audiowide-Regular.ttf');
   font-weight: 400;
+  font-display: swap;
 }
 
 
@@ -27,18 +28,21 @@
   font-family: 'Montserrat';
   src: url('./assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf');
   font-weight: 400;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'JetBrains';
   src: url('./assets/fonts/JetBrainsMono-2.304/fonts/variable/JetBrainsMono[wght].ttf');
   font-weight: 400;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'beba';
   src: url('assets/fonts/beba.woff2');
   font-weight: 400;
+  font-display: swap;
 }
 
 

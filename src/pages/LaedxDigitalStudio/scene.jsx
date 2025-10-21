@@ -11,7 +11,8 @@ import { RigidBody, useRapier } from "@react-three/rapier";
 
 import Bee from '@/components/three/Objects/Bee';
 import Rocks from '@/components/three/Objects/Rocks';
-import HexSphere from '@/components/three/Objects/HexSphere';
+import RingCylinder from '@/components/three/Objects/RingCylinder';
+// import HexSphere from '@/components/three/Objects/HexSphere';
 
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
 import '@/components/three/materials/DissolveMaterial';
@@ -41,43 +42,98 @@ function DissolveSphere({ progress = 0 }) {
 	);
 }
 
-
-
 function Sphere() {
+  // Parameters
+  const texture = useTexture("/textures/worldmap/alpha.jpg");
+  const sphereRadius = 1
+  const offset = 0.0 // small gap so cylinder doesn’t clip into the sphere
+  const cylinderLength = 0.02
 
-	return (
-		<RigidBody
-			colliders="ball"
-			type="fixed" // allow physics interaction
-			restitution={0.9}
-			friction={0.4}
-			mass={3}
-	  	>
-			<group
-				onPointerDown={(e) => {
-					e.object.material.uInteractionStrength = 2.5
-				}}
-				rotation={[0.4, 0.2, 0]} 
-				position={[0, 0, 0]}
-			>
-				<mesh>
-					<sphereGeometry args={[1, 64, 64]} />
-					<HolographicMaterial
-						side={"FrontSide"}
-						scanlineSize={10.0}
-						hologramColor="#51a4de"
-						hologramOpacity={0.9}
-						fresnelOpacity={0.9}
-						hologramBrightness={2.2}
-						signalSpeed={0.45}
-						fresnelAmount={0.45}
-					/>
-				</mesh>
-				<pointLight position={[0, 0, 0]} intensity={30} color="#51a4de" />
-			</group>
-		</RigidBody>
+  // Direction where you want the cylinder (example: diagonally upward)
+  const direction = new THREE.Vector3(-0.4, 0.8, 0.6).normalize()
 
-	);
+  // Position = direction * (sphere radius + half cylinder length + small offset)
+  const position = direction.clone().multiplyScalar(
+    sphereRadius + cylinderLength / 2 + offset
+  )
+
+  // Align cylinder so its axis points along that direction
+  const quaternion = new THREE.Quaternion()
+  quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
+
+  return (
+    <RigidBody type="fixed" colliders="ball" restitution={0.9} friction={0.4}>
+      <group rotation={[0.2, 0.0, 0]} position={[0, 0, 0]}>
+
+
+
+		<group>
+			<mesh position={position} quaternion={quaternion}>
+			<cylinderGeometry args={[0.06, 0.06, cylinderLength, 32]} />
+			<meshBasicMaterial 
+				color="#ff5500"
+				side={2}
+				transparent
+				opacity={0.8}
+			/>
+			</mesh>
+
+			<mesh position={position} quaternion={quaternion}>
+				<cylinderGeometry args={[0.03, 0.03, cylinderLength + 0.001, 32]} />
+				<meshBasicMaterial 
+					color="#51a4de"
+					side={2}
+					transparent
+					opacity={0.8}
+				/>
+			</mesh>
+
+
+			<RingCylinder direction={[-1.5, -0.5, 0.5]} color1="#d0ad80" color2="#51a4de" /> // america
+			<RingCylinder direction={[0, 1, 0]} color1="#d0ad80" color2="#51a4de" /> // auropa
+			<RingCylinder direction={[0, 0, 1]} color1="#d0ad80" color2="#51a4de" /> // south africa
+			<RingCylinder direction={[1, 1, 0]} color1="#d0ad80" color2="#51a4de" /> // asia
+			<RingCylinder direction={[0.5, 1, 1]} color1="#d0ad80" color2="#51a4de" /> // Palestine
+		</group>
+
+
+
+		<group rotation={[-0.7, 4.6 , 0]}>
+			<mesh>
+				<sphereGeometry args={[sphereRadius, 64, 64]} />
+				<HolographicMaterial
+					side="DoubleSide"
+					scanlineSize={10.0}
+					hologramColor="#51a4de"
+					hologramOpacity={0.9}
+					fresnelOpacity={0.9}
+					hologramBrightness={2.2}
+					signalSpeed={0.45}
+					fresnelAmount={0.45}
+					alphaMap={texture}
+				/>
+			</mesh>
+
+			<mesh >
+				<sphereGeometry args={[sphereRadius, 64, 64]} />
+				<HolographicMaterial
+					side="FrontSide"
+					scanlineSize={10.0}
+					hologramColor="#51a4de"
+					hologramOpacity={0.4}
+					fresnelOpacity={0.4}
+					hologramBrightness={1.2}
+					signalSpeed={0.45}
+					fresnelAmount={0.45}
+					alphaMap={null}
+				/>
+			</mesh>
+		</group>
+
+        <pointLight position={[0, 0, 0]} intensity={30} color="#51a4de" />
+      </group>
+    </RigidBody>
+  )
 }
 
 

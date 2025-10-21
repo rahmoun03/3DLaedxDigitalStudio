@@ -3,11 +3,11 @@ import { useSpring, animated } from "@react-spring/web";
 import { useLoadingStore } from "@/hooks/useLoadingStore";
 
 const tips = [
-  {tip: "💡 Swipe left/right to explore NoveXperience/HiveXperience.", gif: '/gif/swipeLeft.webm'},
-  {tip: "🌌 Shake your phone to see something cool!", gif: '/gif/swipeLeft.webm'},
-  {tip: "✨ Discover interactive 3D stories.", gif: '/gif/swipeLeft.webm'},
-  {tip: "🚀 Experience the future of digital immersion.", gif: '/gif/swipeLeft.webm'},
-  {tip: "🎧 Turn up your sound for the best experience.", gif: '/gif/swipeLeft.webm'}
+  {id: 1, tip: "💡 Swipe from left to right to explore NoveXperience.", gif: '/gif/swipeLeft.webm'},
+  {id: 2, tip: "💡 Swipe from right to left to explore HiveXperience.", gif: '/gif/swipeLeft.webm'},
+  {id: 3, tip: "🌌 Shake your phone to see something cool!", gif: '/gif/shakePhone.webm'},
+  {id: 4, tip: "🎧 Turn up your sound for the best experience.", gif: '/gif/volumeUp.webm'},
+//   {id: 5, tip: "🚀 Experience the future of digital immersion.", gif: '/gif/swipeLeft.webm'}
 ];
 
 export default function LoadingPage() {
@@ -20,8 +20,10 @@ export default function LoadingPage() {
 
 	// Rotate random tips every 3 seconds
 	useEffect(() => {
+		let next = 0;
 		const interval = setInterval(() => {
-		setTip(tips[Math.floor(Math.random() * tips.length)]);
+			setTip(tips[next]);
+			next = (next + 1) % tips.length;
 		}, 4000);
 		return () => clearInterval(interval);
 	}, []);
@@ -66,10 +68,27 @@ export default function LoadingPage() {
 		}
 	}, [displayProgress]);
 
-	const handleStart = () => {
+	const handleStart = async () => {
+
+		// Ask for motion permission (iOS only)
+		if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
+			try {
+			const response = await DeviceMotionEvent.requestPermission();
+			if (response === "granted") {
+				console.log("✅ Motion permission granted on iOS");
+			} else {
+				console.warn("❌ Motion permission denied by user");
+			}
+			} catch (err) {
+			console.error("⚠️ Motion permission request failed:", err);
+			}
+		} else {
+			console.log("ℹ️ DeviceMotionEvent permission not required or not supported on this device");
+		}
+				
 		setVisible(false);
 		setTimeout(() => {
-		setReady(false);
+			setReady(false);
 		}, 2000);
 	};
 
@@ -85,7 +104,9 @@ export default function LoadingPage() {
 				autoPlay
 				loop
 				muted
-				className="border-1 border-gray-800 rounded-2xl p-10"
+				playsInline
+				className={`rounded-2xl p-10`}
+				style={{transform: tip.id === 1 ? "scaleX(-1)" : "scaleX(1)"}}
 			/>
 			<p className="text-sm text-gray-400 font-[Montserrat] text-center">{ tip.tip }</p>
 
