@@ -71,6 +71,7 @@ function HoloLight() {
 
 function Sphere() {
   // Parameters
+  const groupRef = useRef();
   const texture = useTexture("/textures/worldmap/alpha.jpg");
   const sphereRadius = 1
   const offset = 0.0 // small gap so cylinder doesn’t clip into the sphere
@@ -88,9 +89,17 @@ function Sphere() {
   const quaternion = new THREE.Quaternion()
   quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction)
 
+
+//   useFrame(() => {
+// 	if(groupRef.current) {
+// 		groupRef.current.rotation.x += 0.001;
+// 		groupRef.current.rotation.y += 0.01;
+// 	}
+//   })
+
   return (
     <RigidBody type="fixed" colliders="ball" restitution={0.9} friction={0.4}>
-      <group rotation={[0.2, 0.0, 0]} position={[0, 0, 0]}>
+      <group rotation={[0.2, 0.0, 0]} position={[0, 0, 0]} ref={groupRef}>
 
 
 
@@ -300,10 +309,8 @@ function HologramLogo() {
 function HomeScene() {
 
 	console.log('Home Scene called !!!')
-	// window.alert('aaaaaaaaaaaaaa');
 
-
-	const { camera, size } = useThree();
+	const { camera } = useThree();
 	const groupRef = useRef();
 
 
@@ -314,20 +321,13 @@ function HomeScene() {
 		camera.lookAt(0, 0, 0);
 	})
 
-
-	// useShake(() => {
-	// 	window.alert("You shook your phone! 🎉");
-	// }, 2500);
-
 	return (
 		<group ref={groupRef}>
 			<Physics gravity={[0, 0, 0]}>
 				<Sphere />
-				{/* <AnimatedCurveLine /> */}
 				<Bee scale={[0.02, 0.02, 0.02]} position={[0, 0, -2]}/>
 				<Rocks rockCount={60} radius={1.5} />
-				{/* <DissolveSphere progress={progressRightRef.current} /> */}
-				{/* <HexSphere radius={2} hexCount={900} color="#FF5500" /> */}
+
 			</Physics>
 
 			{/* <LiquidSphere /> */}

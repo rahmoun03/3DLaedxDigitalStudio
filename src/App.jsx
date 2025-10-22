@@ -1,35 +1,36 @@
-
-import { Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { Suspense, useState } from "react";
+import { Canvas , useLoader} from "@react-three/fiber";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { OrbitControls, Stats } from "@react-three/drei";
 
-
-
-import SceneManager from "./pages/SceneManager";
+import HomeScene from "@/pages/LaedxDigitalStudio/scene";
 import LoadingPage from "./Loading";
 import { ResponsiveCamera, Lights, LoaderBridge } from "./Laedx";
-import ScrollSwipeProgress from "@/components/ui/ScrollProgress";	
-
-
-// UI
+import ScrollSwipeProgress from "@/components/ui/ScrollProgress";
 import LaedxDigitalStudioUI from "./pages/LaedxDigitalStudio/index";
-
+import { AudioLoader } from "three";
 
 function App() {
-	useGLTF.preload('/models/bee/source/Bee.glb');
+	useGLTF.preload("/models/bee/source/Bee.glb");
+	useTexture.preload("/textures/worldmap/alpha.jpg");
+	useTexture.preload("/models/bee/textures/gltf_embedded_0.png");
+	useLoader(AudioLoader, '/sounds/bee-flying.mp3');
+	useGLTF.preload("/models/small_rock.glb");
 
-	console.log('App called !!!')
+	const [started, setStarted] = useState(false);
+
+	console.log("App called !!!");
 
 	return (
-		<>
-			<ScrollSwipeProgress />
-			{/* <CustomCursor /> */}
-			<LoadingPage />
+	<>
+		<ScrollSwipeProgress />
+		<LoadingPage onStart={() => setStarted(true)} />
+
+		
 			<Canvas
-				camera={{ position: [0, 0, 5] , fov: 55 }}
-				style={{ 
-					height: '100dvh', 
+				camera={{ position: [0, 0, 5], fov: 55 }}
+				style={{
+					height: "100dvh",
 					background: "#000",
 				}}
 			>
@@ -38,18 +39,17 @@ function App() {
 					<LoaderBridge />
 					<Lights />
 					{/* <OrbitControls /> */}
-					<SceneManager />
+					{started && (
+						<HomeScene />
+					)}
 					{/* <Stats /> */}
 				</Suspense>
 			</Canvas>
-			
 
-			{/* UI/UX */}
-			<LaedxDigitalStudioUI />
-			{/* <Home /> */}
-			{/* <ComingSoon /> */}
-		</>
-	)
+		{/* UI/UX */}
+		<LaedxDigitalStudioUI />
+	</>
+	);
 }
 
-export default App
+export default App;

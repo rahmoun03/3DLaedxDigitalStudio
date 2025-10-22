@@ -10,7 +10,7 @@ const tips = [
 //   {id: 5, tip: "🚀 Experience the future of digital immersion.", gif: '/gif/swipeLeft.webm'}
 ];
 
-export default function LoadingPage() {
+export default function LoadingPage({ onStart }) {
 	const progress = useLoadingStore((state) => state.progress);
 	const [displayProgress, setDisplayProgress] = useState(0);
 	const [visible, setVisible] = useState(true);
@@ -71,25 +71,29 @@ export default function LoadingPage() {
 	const handleStart = async () => {
 
 		// Ask for motion permission (iOS only)
-		if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
+		if (
+			typeof DeviceMotionEvent !== "undefined" &&
+			typeof DeviceMotionEvent.requestPermission === "function"
+		) {
 			try {
-			const response = await DeviceMotionEvent.requestPermission();
-			if (response === "granted") {
-				console.log("✅ Motion permission granted on iOS");
-			} else {
-				console.warn("❌ Motion permission denied by user");
-			}
+				const response = await DeviceMotionEvent.requestPermission();
+				if (response === "granted") {
+					console.log("✅ Motion permission granted on iOS");
+				} else {
+					console.warn("❌ Motion permission denied by user");
+				}
 			} catch (err) {
-			console.error("⚠️ Motion permission request failed:", err);
+				console.error("⚠️ Motion permission request failed:", err);
 			}
 		} else {
 			console.log("ℹ️ DeviceMotionEvent permission not required or not supported on this device");
 		}
-				
+		
+		if (onStart) onStart();
 		setVisible(false);
 		setTimeout(() => {
 			setReady(false);
-		}, 2000);
+		}, 100);
 	};
 
 	return (
@@ -99,7 +103,7 @@ export default function LoadingPage() {
 		}`}
 		>
 		<div className="flex flex-col w-full justify-center items-center gap-8">
-			<video 
+			{/* <video 
 				src={tip.gif}
 				autoPlay
 				loop
@@ -108,7 +112,7 @@ export default function LoadingPage() {
 				className={`rounded-2xl p-10`}
 				style={{transform: tip.id === 1 ? "scaleX(-1)" : "scaleX(1)"}}
 			/>
-			<p className="text-sm text-gray-400 font-[Montserrat] text-center">{ tip.tip }</p>
+			<p className="text-sm text-gray-400 font-[Montserrat] text-center">{ tip.tip }</p> */}
 
 			{/* {ready && ( */}
 			<button
