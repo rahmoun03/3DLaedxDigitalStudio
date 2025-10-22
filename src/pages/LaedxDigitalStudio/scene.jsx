@@ -43,6 +43,32 @@ function DissolveSphere({ progress = 0 }) {
 	);
 }
 
+function HoloLight() {
+  const lightRef = useRef();
+
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+
+    if (lightRef.current) {
+      lightRef.current.position.x = Math.sin(t * 15) * 0.05;
+      lightRef.current.position.y = Math.cos(t * 17) * 0.05;
+      lightRef.current.position.z = Math.sin(t * 19) * 0.03;
+
+      lightRef.current.intensity = 30 + Math.sin(t * 40) * 4 + Math.random() * 0.6;
+    }
+  });
+
+  return (
+    <pointLight
+      ref={lightRef}
+      position={[0, 0, 0]}
+      intensity={30}
+      color="#51a4de"
+      distance={10}
+    />
+  );
+}
+
 function Sphere() {
   // Parameters
   const texture = useTexture("/textures/worldmap/alpha.jpg");
@@ -147,7 +173,7 @@ function Sphere() {
 			key={i}
 			start={position}
 			end={end}
-			color="#ff5500"
+			color="#d0ad80"
 			curvature={0.5} // stronger arc
 			thickness={0.01} // thicker line
 			speed={0.5} // slower reveal
@@ -156,7 +182,8 @@ function Sphere() {
 		})}
 
 
-        <pointLight position={[0, 0, 0]} intensity={30} color="#51a4de" />
+        {/* <pointLight position={[0, 0, 0]} intensity={30} color="#51a4de" /> */}
+		<HoloLight />
       </group>
     </RigidBody>
   )

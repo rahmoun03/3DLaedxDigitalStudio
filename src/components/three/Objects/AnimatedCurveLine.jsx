@@ -9,7 +9,7 @@ export default function AnimatedCurveLine({
   thickness = 0.02,
   curvature = 0.8,
   speed = 0.6,
-  pause = 0.5, // pause before restart
+  pause = 0.5,
 }) {
   const [progress, setProgress] = useState(0);
   const [pauseTime, setPauseTime] = useState(0);
