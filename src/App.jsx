@@ -37,7 +37,7 @@ function App() {
 					<ResponsiveCamera />
 					<LoaderBridge />
 					<Lights />
-					<OrbitControls maxZoom={3} />
+					<OrbitControls />
 					<SceneManager />
 					{/* <Stats /> */}
 				</Suspense>

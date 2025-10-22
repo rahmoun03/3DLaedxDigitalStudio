@@ -12,6 +12,7 @@ import { RigidBody, useRapier } from "@react-three/rapier";
 import Bee from '@/components/three/Objects/Bee';
 import Rocks from '@/components/three/Objects/Rocks';
 import RingCylinder from '@/components/three/Objects/RingCylinder';
+import AnimatedCurveLine from '@/components/three/Objects/AnimatedCurveLine';
 // import HexSphere from '@/components/three/Objects/HexSphere';
 
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
@@ -47,7 +48,7 @@ function Sphere() {
   const texture = useTexture("/textures/worldmap/alpha.jpg");
   const sphereRadius = 1
   const offset = 0.0 // small gap so cylinder doesn’t clip into the sphere
-  const cylinderLength = 0.02
+  const cylinderLength = 0.015
 
   // Direction where you want the cylinder (example: diagonally upward)
   const direction = new THREE.Vector3(-0.4, 0.8, 0.6).normalize()
@@ -68,32 +69,34 @@ function Sphere() {
 
 
 		<group>
+			{/* global ring */}
 			<mesh position={position} quaternion={quaternion}>
-			<cylinderGeometry args={[0.06, 0.06, cylinderLength, 32]} />
-			<meshBasicMaterial 
-				color="#ff5500"
-				side={2}
-				transparent
-				opacity={0.8}
-			/>
-			</mesh>
-
-			<mesh position={position} quaternion={quaternion}>
-				<cylinderGeometry args={[0.03, 0.03, cylinderLength + 0.001, 32]} />
+				<cylinderGeometry args={[0.06, 0.06, cylinderLength, 32]} />
 				<meshBasicMaterial 
-					color="#51a4de"
+					color="#ff5500"
 					side={2}
 					transparent
 					opacity={0.8}
 				/>
 			</mesh>
 
+			<mesh position={position} quaternion={quaternion}>
+				<cylinderGeometry args={[0.03, 0.03, cylinderLength + 0.001, 32]} />
+				<meshBasicMaterial 
+					color="#bfced9"
+					side={2}
+					transparent
+					opacity={0.9}
+				/>
+			</mesh>
 
-			<RingCylinder direction={[-1.5, -0.5, 0.5]} color1="#d0ad80" color2="#51a4de" /> // america
-			<RingCylinder direction={[0, 1, 0]} color1="#d0ad80" color2="#51a4de" /> // auropa
-			<RingCylinder direction={[0, 0, 1]} color1="#d0ad80" color2="#51a4de" /> // south africa
-			<RingCylinder direction={[1, 1, 0]} color1="#d0ad80" color2="#51a4de" /> // asia
-			<RingCylinder direction={[0.5, 1, 1]} color1="#d0ad80" color2="#51a4de" /> // Palestine
+
+			{/* local rings */}
+			<RingCylinder direction={[-1.5, -0.5, 0.5]} color1="#d0ad80" color2="#bfced9" /> // america
+			<RingCylinder direction={[0, 1, 0]} color1="#d0ad80" color2="#bfced9" /> // auropa
+			<RingCylinder direction={[0, 0, 1]} color1="#d0ad80" color2="#bfced9" /> // south africa
+			<RingCylinder direction={[1, 1, 0]} color1="#d0ad80" color2="#bfced9" /> // asia
+			<RingCylinder direction={[0.5, 1, 1]} color1="#d0ad80" color2="#bfced9" /> // Palestine
 		</group>
 
 
@@ -129,6 +132,29 @@ function Sphere() {
 				/>
 			</mesh>
 		</group>
+
+
+		{[
+		[-1.5, -0.5, 0.5],
+		[0, 1, 0],
+		[0, 0, 1],
+		[1, 1, 0],
+		[0.5, 1, 1],
+		].map((dir, i) => {
+		const end = new THREE.Vector3(...dir).normalize().multiplyScalar(1);
+		return (
+			<AnimatedCurveLine
+			key={i}
+			start={position}
+			end={end}
+			color="#ff5500"
+			curvature={0.5} // stronger arc
+			thickness={0.01} // thicker line
+			speed={0.5} // slower reveal
+			/>
+		);
+		})}
+
 
         <pointLight position={[0, 0, 0]} intensity={30} color="#51a4de" />
       </group>
@@ -270,6 +296,7 @@ function HomeScene() {
 		<group ref={groupRef}>
 			<Physics gravity={[0, 0, 0]}>
 				<Sphere />
+				{/* <AnimatedCurveLine /> */}
 				<Bee scale={[0.02, 0.02, 0.02]} position={[0, 0, -2]}/>
 				<Rocks rockCount={60} radius={1.5} />
 				{/* <DissolveSphere progress={progressRightRef.current} /> */}
