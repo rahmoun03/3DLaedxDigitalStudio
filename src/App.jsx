@@ -15,6 +15,9 @@ function App() {
 	useTexture.preload("/textures/worldmap/alpha.jpg");
 	useTexture.preload("/models/bee/textures/gltf_embedded_0.png");
 	useLoader(AudioLoader, '/sounds/bee-flying.mp3');
+	useLoader(AudioLoader, "/sounds/stone.wav");
+	useLoader(AudioLoader, '/sounds/buzz.mp3');
+	useLoader(AudioLoader, "/sounds/spacecraft.mp3");
 	useGLTF.preload("/models/small_rock.glb");
 
 	const [started, setStarted] = useState(false);
@@ -23,7 +26,7 @@ function App() {
 
 	return (
 	<>
-		<ScrollSwipeProgress />
+		{/* <ScrollSwipeProgress /> */}
 		<LoadingPage onStart={() => setStarted(true)} />
 
 		
@@ -38,7 +41,7 @@ function App() {
 					<ResponsiveCamera />
 					<LoaderBridge />
 					<Lights />
-					{/* <OrbitControls /> */}
+					<OrbitControls />
 					{started && (
 						<HomeScene />
 					)}

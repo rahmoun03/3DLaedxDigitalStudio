@@ -1,10 +1,11 @@
-import React, { useRef, useEffect, Suspense } from "react";
-import { Canvas, useFrame, useThree, extend} from "@react-three/fiber";
+import { useRef, useEffect, useMemo } from "react";
+import { useFrame, useThree, useLoader} from "@react-three/fiber";
 import { MeshReflectorMaterial, useTexture, useAnimations, useGLTF } from '@react-three/drei';
 import * as THREE from 'three'
 import { EffectComposer , Bloom } from '@react-three/postprocessing';
+import { AudioLoader } from "three";
 import { Physics } from "@react-three/rapier";
-import { RigidBody, useRapier } from "@react-three/rapier";
+import { RigidBody } from "@react-three/rapier";
 
 
 
@@ -127,11 +128,11 @@ function Sphere() {
 
 
 			{/* local rings */}
-			<RingCylinder direction={[-1.5, -0.5, 0.5]} color1="#d0ad80" color2="#bfced9" /> // america
+			<RingCylinder direction={[-1.5, -0.5, 0.5]} color1="#d0ad80" color2="#bfced9" /> // barazil
 			<RingCylinder direction={[0, 1, 0]} color1="#d0ad80" color2="#bfced9" /> // auropa
 			<RingCylinder direction={[0, 0, 1]} color1="#d0ad80" color2="#bfced9" /> // south africa
-			<RingCylinder direction={[1, 1, 0]} color1="#d0ad80" color2="#bfced9" /> // asia
-			<RingCylinder direction={[0.5, 1, 1]} color1="#d0ad80" color2="#bfced9" /> // Palestine
+			<RingCylinder direction={[-2.0, 0.5 , -0.5]} color1="#d0ad80" color2="#bfced9" /> // USA
+			<RingCylinder direction={[0.5, 1.3, 1]} color1="#d0ad80" color2="#bfced9" /> // Palestine
 		</group>
 
 
@@ -173,21 +174,21 @@ function Sphere() {
 		[-1.5, -0.5, 0.5],
 		[0, 1, 0],
 		[0, 0, 1],
-		[1, 1, 0],
-		[0.5, 1, 1],
+		[-2.0, 0.5 , -0.5],
+		[0.5, 1.3, 1],
 		].map((dir, i) => {
-		const end = new THREE.Vector3(...dir).normalize().multiplyScalar(1);
-		return (
-			<AnimatedCurveLine
-			key={i}
-			start={position}
-			end={end}
-			color="#d0ad80"
-			curvature={0.5} // stronger arc
-			thickness={0.01} // thicker line
-			speed={0.5} // slower reveal
-			/>
-		);
+			const end = new THREE.Vector3(...dir).normalize().multiplyScalar(1);
+			return (
+				<AnimatedCurveLine
+				key={i}
+				start={position}
+				end={end}
+				color="#d0ad80"
+				curvature={0.5} // stronger arc
+				thickness={0.01} // thicker line
+				speed={0.5} // slower reveal
+				/>
+			);
 		})}
 
 
@@ -312,10 +313,41 @@ function HomeScene() {
 
 	const { camera } = useThree();
 	const groupRef = useRef();
+	const listener = useMemo(() => new THREE.AudioListener(), []);
+	const buzzSound = useLoader(AudioLoader, '/sounds/buzz.mp3');
+	const spacecraftSound = useLoader(AudioLoader, "/sounds/spacecraft.mp3");
 
 
+	useEffect(() => {
+		const audio = new THREE.PositionalAudio(listener);
+		const audio2 = new THREE.PositionalAudio(listener);
+		audio.setBuffer(buzzSound);
+		audio2.setBuffer(spacecraftSound);
+		audio.setRefDistance(1);
+		audio.setLoop(true);
+		audio.setVolume(0.5);
+		audio2.setRefDistance(1);
+		audio2.setLoop(true);
+		audio2.setVolume(0.5);
+		try {
+			audio.play();
+			// audio2.play();
+		} catch (e) {
+			console.warn("Audio play blocked until user interaction");
+		}
 
-	const { progressRightRef, progressLeftRef } = useProgressStore();
+		camera.add(listener);
+		return () => {
+			try {
+				audio.stop();
+				audio.disconnect();
+				audio2.stop();
+				audio2.disconnect();
+			} catch {}
+			camera.remove(listener);
+		};
+	}, [buzzSound, spacecraftSound, camera, listener]);
+
 
 	useFrame(() => {
 		camera.lookAt(0, 0, 0);
