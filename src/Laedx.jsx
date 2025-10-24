@@ -54,26 +54,10 @@ export function ResponsiveCamera() {
 
 export function Lights() {
 
-	// const { products } = useSections();
-
-	// const activeProduct = products.find((p) => p.active)?.name;
-	const activeProduct = 'none';
-
-	const sectionLight = {
-		Home: '#F7EFC5',
-		NoveXperience: '#D5F3FF',
-		HiveXperience: '#FFC30B',
-	};
-
 	return (
 		<>
 			{/* <ambientLight intensity={0.2} /> */}
 			<pointLight position={[0, 0, 6]} intensity={8} color='white' />
-			{/* <pointLight 
-				position={[0, 1.3, 0]}
-				intensity={4.5}
-				color={sectionLight[activeProduct] || '#f7efc5'}
-			/> */}
 		</>
 	);
 }

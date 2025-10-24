@@ -1,13 +1,22 @@
 import { Suspense, useState } from "react";
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { Canvas , useLoader} from "@react-three/fiber";
 import { useGLTF, useTexture } from "@react-three/drei";
 import { OrbitControls, Stats } from "@react-three/drei";
 
+
+// pages
 import HomeScene from "@/pages/LaedxDigitalStudio/scene";
+import HiveXperience from "@/pages/HiveXperience/scene";
+
+// UI/UX
+import LaedxDigitalStudioUI from "@/pages/LaedxDigitalStudio";
+// import HiveXperienceUI from "@/pages/HiveXperience";
+
+// components
 import LoadingPage from "./Loading";
 import { ResponsiveCamera, Lights, LoaderBridge } from "./Laedx";
 import ScrollSwipeProgress from "@/components/ui/ScrollProgress";
-import LaedxDigitalStudioUI from "./pages/LaedxDigitalStudio/index";
 import { AudioLoader } from "three";
 
 function App() {
@@ -26,31 +35,73 @@ function App() {
 
 	return (
 	<>
-		{/* <ScrollSwipeProgress /> */}
-		<LoadingPage onStart={() => setStarted(true)} />
+		<Router>
+			<Routes>
+				
+				<Route
+					path='/'
+					element={
+						<>
+							<ScrollSwipeProgress />
+							<LoadingPage onStart={() => setStarted(true)} />
+							<Canvas
+								camera={{ position: [0, 0, 5], fov: 55 }}
+								style={{
+									height: "100dvh",
+									background: "#000",
+								}}
+							>
+								<Suspense fallback={null}>
+									<ResponsiveCamera />
+									<LoaderBridge />
+									<Lights />
+									{/* <OrbitControls /> */}
+									{started && (
+										<HomeScene />
+									)}
+									{/* <Stats /> */}
+								</Suspense>
+							</Canvas>
 
-		
-			<Canvas
-				camera={{ position: [0, 0, 5], fov: 55 }}
-				style={{
-					height: "100dvh",
-					background: "#000",
-				}}
-			>
-				<Suspense fallback={null}>
-					<ResponsiveCamera />
-					<LoaderBridge />
-					<Lights />
-					<OrbitControls />
-					{started && (
-						<HomeScene />
-					)}
-					{/* <Stats /> */}
-				</Suspense>
-			</Canvas>
+							{/* UI/UX */}
+							<LaedxDigitalStudioUI />
+						</>
+					}
+				/>
 
-		{/* UI/UX */}
-		<LaedxDigitalStudioUI />
+
+
+				<Route
+					path='/hivexperience'
+					element={
+						<>
+							<Canvas
+								camera={{ position: [0, 0, 5], fov: 55 }}
+								style={{
+									height: "100dvh",
+									background: "#000",
+								}}
+							>
+								<Suspense fallback={null}>
+									<ResponsiveCamera />
+									<LoaderBridge />
+									<Lights />
+									{/* <OrbitControls /> */}
+									{started && (
+										<HiveXperience />
+									)}
+									{/* <Stats /> */}
+								</Suspense>
+							</Canvas>
+
+							{/* UI/UX */}
+							{/* <LaedxDigitalStudioUI /> */}
+						</>
+					}
+				/>
+			</Routes>
+		</Router>
+
 	</>
 	);
 }

@@ -47,7 +47,7 @@ export default function Footer() {
 							key={index}
 							href={media.link}
 							target="_blank"
-							className="hover:text-white cursor-pointer"
+							className="hover:text-white cursor-pointer pointer-events-auto"
 						>
 							{media.name}
 						</a>

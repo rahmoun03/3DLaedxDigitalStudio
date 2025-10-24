@@ -15,7 +15,7 @@ export default function Bee(props) {
 	const { progressRightRef } = useProgressStore();
 
 	const sound = useRef();
-	const listener = useMemo(() => new THREE.AudioListener(), []);
+	const beelistener = useMemo(() => new THREE.AudioListener(), []);
 	const buffer = useLoader(THREE.AudioLoader, '/sounds/bee-flying.mp3');
 
 	const beeRef = useRef();
@@ -52,7 +52,7 @@ export default function Bee(props) {
 
 	
 	useEffect(() => {
-		const audio = new THREE.PositionalAudio(listener);
+		const audio = new THREE.PositionalAudio(beelistener);
 		sound.current = audio;
 		audio.setBuffer(buffer);
 		audio.setRefDistance(1);
@@ -64,15 +64,15 @@ export default function Bee(props) {
 			console.warn("Audio play blocked until user interaction");
 		}
 
-		camera.add(listener);
+		camera.add(beelistener);
 		return () => {
 			try {
 				audio.stop();
 				audio.disconnect();
 			} catch {}
-			camera.remove(listener);
+			camera.remove(beelistener);
 		};
-	}, [buffer, camera, listener]);
+	}, [buffer, camera, beelistener]);
 
 
 	useFrame(() => {
