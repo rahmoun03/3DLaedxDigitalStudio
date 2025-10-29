@@ -24,15 +24,15 @@ export default function Bee(props) {
 	const curve = useMemo(
 		() =>
 		new THREE.CatmullRomCurve3([
-			new THREE.Vector3(0, 0, -2),
+			new THREE.Vector3(0, 0.4, -2),
 			new THREE.Vector3(0.5, 0.5, -1.5),
 			new THREE.Vector3(1, 1, -1),
 			new THREE.Vector3(1, 0.8, 0),
 			new THREE.Vector3(0.4, 0.4, 1),
-			new THREE.Vector3(0, 0.2, 2),
-			new THREE.Vector3(0, 0.8, 3),
-			new THREE.Vector3(0, 1.8, 5),
-			new THREE.Vector3(0, 2, 6),
+			new THREE.Vector3(0, -0.8, 2),
+			new THREE.Vector3(0, -0.6, 3),
+			new THREE.Vector3(0, -0.2, 5),
+			new THREE.Vector3(0, 0, 6),
 		]),
 		[]
 	);
@@ -82,7 +82,7 @@ export default function Bee(props) {
 		const t = Math.min(progressRightRef.current / 100, 1);
 		const target = curve.getPoint(t);
 
-		bee.position.lerp(target, 0.08);
+		bee.position.lerp(target, 0.12);
 		bee.visible = progressRightRef.current >= 6;
 		sound.current?.setVolume(progressRightRef.current / 100);
 		sound.current?.setRefDistance(progressRightRef.current / 100);

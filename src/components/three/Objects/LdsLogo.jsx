@@ -21,6 +21,20 @@ export default function LdsLogo() {
 		() => new THREE.Vector3(-0.4, 0.8, 0.6).normalize(),
 		[]
 	);
+	const ProjectorDir = useMemo(
+		() => new THREE.Vector3(0, -3, 2).normalize(),
+		[]
+	)
+
+	const ProjectorPosition = useMemo(
+		() =>
+			ProjectorDir
+				.clone()
+				.multiplyScalar(sphereRadius + cylinderLength / 2 + offset + 1.5),
+		[ProjectorDir]
+	);
+
+
 	const position = useMemo(
 		() =>
 			direction
@@ -28,25 +42,48 @@ export default function LdsLogo() {
 				.multiplyScalar(sphereRadius + cylinderLength / 2 + offset),
 		[direction]
 	);
+
 	const quaternion = useMemo(() => {
 		const q = new THREE.Quaternion();
 		q.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
 		return q;
 	}, [direction]);
+	
+	const ProjectionQuaternion = useMemo(() => {
+		const q = new THREE.Quaternion();
+		q.setFromUnitVectors(new THREE.Vector3(0, 1, 0), ProjectorDir);
+		return q;
+	}, [ProjectorDir]);
 
 	// Ring data
 	const rings = [
 		{ dir: [-1.5, -0.5, 0.5], label: "Brazil" },
 		{ dir: [0, 1, 0], label: "Europe" },
 		{ dir: [0, 0, 1], label: "South Africa" },
-		{ dir: [-2.0, 0.5, -0.5], label: "USA" },
+		{ dir: [-2.0, 1.5, -0.5], label: "Canada" },
 		{ dir: [0.5, 1.3, 1], label: "Palestine" },
 	];
 
 	return (
 		<RigidBody type="fixed" colliders="ball" restitution={0.9} friction={0.4}>
-			<group rotation={[0.2, 0.0, 0]} ref={groupRef}>
-				{/* Global center ring */}
+			<group rotation={[0.7, 0.1, 0]} ref={groupRef}>
+				{/* shadow of projection */}
+				{/* <mesh position={ProjectorPosition} quaternion={ProjectionQuaternion}> */}
+					{/* <cylinderGeometry args={[0.01, sphereRadius, 5, 64]} /> */}
+					{/* <meshBasicMaterial color="#51a4de" side={THREE.DoubleSide} transparent opacity={0.02} wireframe/> */}
+					{/* <HolographicMaterial
+							side="BackSide"
+							scanlineSize={3.0}
+							hologramColor="#51a4de"
+							hologramOpacity={0.4}
+							fresnelOpacity={0.4}
+							hologramBrightness={0.4}
+							signalSpeed={0.45}
+							fresnelAmount={0.45}
+							// alphaMap={texture}
+					/> */}
+				{/* </mesh> */}
+				{/* Global center ring */} 
 				<mesh position={position} quaternion={quaternion}>
 					<cylinderGeometry args={[0.06, 0.06, cylinderLength, 32]} />
 					<meshBasicMaterial color="#ff5500" side={2} transparent opacity={0.8} />
@@ -69,7 +106,7 @@ export default function LdsLogo() {
 				))}
 
 				{/* Sphere */}
-				<group rotation={[-0.7, 4.6, 0]}>
+				<group rotation={[-0.7, 4.6, 0]} >
 					<mesh>
 						<sphereGeometry args={[sphereRadius, 64, 64]} />
 						<HolographicMaterial
@@ -78,7 +115,7 @@ export default function LdsLogo() {
 							hologramColor="#51a4de"
 							hologramOpacity={0.9}
 							fresnelOpacity={0.9}
-							hologramBrightness={2.2}
+							hologramBrightness={1.0}
 							signalSpeed={0.45}
 							fresnelAmount={0.45}
 							alphaMap={texture}
@@ -110,7 +147,7 @@ export default function LdsLogo() {
 							start={position}
 							end={end}
 							color="#d0ad80"
-							curvature={0.5}
+							curvature={0.4}
 							thickness={0.01}
 							speed={0.5}
 						/>

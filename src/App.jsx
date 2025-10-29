@@ -1,8 +1,10 @@
 import { Suspense, useState } from "react";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { Canvas , useLoader} from "@react-three/fiber";
-import { useGLTF, useTexture } from "@react-three/drei";
+import { Helper, useGLTF, useTexture } from "@react-three/drei";
 import { OrbitControls, Stats } from "@react-three/drei";
+import { AudioLoader } from "three";
+
 
 
 // pages
@@ -17,7 +19,7 @@ import LaedxDigitalStudioUI from "@/pages/LaedxDigitalStudio";
 import LoadingPage from "./Loading";
 import { ResponsiveCamera, Lights, LoaderBridge } from "./Laedx";
 import ScrollSwipeProgress from "@/components/ui/ScrollProgress";
-import { AudioLoader } from "three";
+import SciFiLoader from "@/components/ui/SciFiLoader";
 
 function App() {
 	useGLTF.preload("/models/bee/source/Bee.glb");
@@ -60,6 +62,9 @@ function App() {
 										<HomeScene />
 									)}
 									{/* <Stats /> */}
+									{/* helper */}
+									{/* <axesHelper /> */}
+									{/* <gridHelper /> */}
 								</Suspense>
 							</Canvas>
 
@@ -73,6 +78,33 @@ function App() {
 
 				<Route
 					path='/hivexperience'
+					element={
+						<>
+							<Canvas
+								camera={{ position: [0, 0, 10], fov: 55 }}
+								style={{
+									height: "100dvh",
+								}}
+							>
+								<Suspense fallback={null}>
+									{/* <ResponsiveCamera /> */}
+									<LoaderBridge />
+									<OrbitControls />
+									<HiveXperience />
+									{/* <Stats /> */}
+								</Suspense>
+							</Canvas>
+
+							{/* UI/UX */}
+							{/* <LaedxDigitalStudioUI /> */}
+						</>
+					}
+				/>
+
+
+
+				<Route
+					path='/novexperience'
 					element={
 						<>
 							<Canvas
@@ -99,6 +131,17 @@ function App() {
 						</>
 					}
 				/>
+				<Route
+					path='/test'
+					element={
+						<>
+							<SciFiLoader />
+						</>
+					}
+				/>
+
+
+
 			</Routes>
 		</Router>
 

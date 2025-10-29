@@ -5,7 +5,9 @@ import * as THREE from 'three'
 import { AudioLoader } from "three";
 import { Physics } from "@react-three/rapier";
 import { RigidBody } from "@react-three/rapier";
-
+import { Bloom } from '@react-three/postprocessing'
+import { EffectComposer } from '@react-three/postprocessing'
+// import { BlurPass, Resizer, KernelSize, Resolution } from 'postprocessing'
 
 
 import Bee from '@/components/three/Objects/Bee';
@@ -13,13 +15,8 @@ import Rocks from '@/components/three/Objects/Rocks';
 import RingCylinder from '@/components/three/Objects/RingCylinder';
 import AnimatedCurveLine from '@/components/three/Objects/AnimatedCurveLine';
 import LdsLogo from '@/components/three/Objects/LdsLogo';
-// import HexSphere from '@/components/three/Objects/HexSphere';
-
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
 import '@/components/three/materials/DissolveMaterial';
-import { useProgressStore } from "@/hooks/useProgressStore";
-import useShake  from "@/hooks/useShake";
-
 
 
 function HoloLight() {
@@ -238,11 +235,22 @@ function HomeScene() {
 
 			</Physics>
 
+			  {/* <Bloom
+				intensity={1.0} // The bloom intensity.
+				blurPass={undefined} // A blur pass.
+				// kernelSize={KernelSize.LARGE} // blur kernel size
+				luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
+				luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
+				mipmapBlur={false} // Enables or disables mipmap blur.
+				// resolutionX={Resolution.AUTO_SIZE} // The horizontal resolution.
+				// resolutionY={Resolution.AUTO_SIZE} // The vertical resolution.
+			/> */}
+
 			{/* <LiquidSphere /> */}
 			{/* <Ground /> */}
 			{/* Post bloom for the hot rim */}
 			{/* <EffectComposer >
-				<Bloom intensity={0.1} luminanceThreshold={0.2} />
+				<Bloom intensity={0.01} luminanceThreshold={0.01} />
 			</EffectComposer> */}
 		</group>
 	);
