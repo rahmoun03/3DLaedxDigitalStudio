@@ -44,7 +44,7 @@ function App() {
 					path='/'
 					element={
 						<>
-							<ScrollSwipeProgress />
+							{/* <ScrollSwipeProgress /> */}
 							<LoadingPage onStart={() => setStarted(true)} />
 							<Canvas
 								camera={{ position: [0, 0, 5], fov: 55 }}
@@ -57,7 +57,7 @@ function App() {
 									<ResponsiveCamera />
 									<LoaderBridge />
 									<Lights />
-									{/* <OrbitControls /> */}
+									<OrbitControls />
 									{started && (
 										<HomeScene />
 									)}

@@ -1,14 +1,18 @@
 import { useRef, useMemo } from "react";
 import { RigidBody } from "@react-three/rapier";
-import { useTexture, Html } from "@react-three/drei";
+import { useTexture, Center, Text3D } from "@react-three/drei";
 import * as THREE from "three";
-
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
 import RingCylinder from '@/components/three/Objects/RingCylinder';
 import AnimatedCurveLine from '@/components/three/Objects/AnimatedCurveLine';
 import HoloLight from '@/components/three/HoloLight';
 
-export default function LdsLogo() {
+import fontUrl from '@/assets/fonts/Inter_Bold.json';
+// import fontUrl from '@/assets/fonts/Audiowide-Regular.json';
+// import ttfFont from '@/assets/fonts/Audiowide/Audiowide-Regular.ttf';
+
+export default async function LdsLogo() {
+
 	const groupRef = useRef();
 	const texture = useTexture("/textures/worldmap/alpha.jpg");
 	const sphereRadius = 1;
@@ -153,7 +157,28 @@ export default function LdsLogo() {
 						/>
 					);
 				})}
+				<group position={[0, -1.5, 0]}>
+					<Center position={[0, 0, 0]}>
+						<Text3D font={fontUrl} lineHeight={0.5}  letterSpacing={0.3} size={0.5} >
+							LAEDX
+							<meshNormalMaterial />
+						</Text3D>
+					</Center>
 
+					<Center  position={[0, -0.5, 0]}>					
+						<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.09}size={0.2} >
+							DIGITAL  STUDIO
+							<meshNormalMaterial />
+						</Text3D>
+					</Center>
+
+					<Center position={[0, -.8, 0]}>
+						<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.05} size={0.1} >
+							LEAD TOGETHER
+							<meshNormalMaterial />
+						</Text3D>
+					</Center>
+				</group>
 				<HoloLight />
 			</group>
 		</RigidBody>
