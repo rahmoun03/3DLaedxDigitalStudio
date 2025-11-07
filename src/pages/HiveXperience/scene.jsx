@@ -3,27 +3,57 @@ import * as THREE from 'three';
 import { useAnimations, useGLTF, useTexture } from "@react-three/drei";
 
 
+function convertStandardToPhysical(stdMat) {
+	const phys = new THREE.MeshPhysicalMaterial();
+
+	// Copy shared PBR properties
+	phys.color = stdMat.color.clone();
+	phys.metalness = stdMat.metalness;
+	phys.roughness = stdMat.roughness;
+
+	phys.map = stdMat.map;
+	phys.normalMap = stdMat.normalMap;
+	phys.roughnessMap = stdMat.roughnessMap;
+	phys.metalnessMap = stdMat.metalnessMap;
+	phys.envMap = stdMat.envMap;
+
+	// Optional: upgraded Physical material tweaks
+	phys.clearcoat = 1.0;
+	phys.clearcoatRoughness = 0.1;
+	phys.transmission = 0;
+	phys.thickness = 0.1;
+
+	return phys;
+}
 
 const HiveBee = () => {
 	const groupRef = useRef();
 	const beeRef = useRef();
-	const { scene, animations} = useGLTF("/models/bee/source/Bee.glb");
+	const { scene, animations} = useGLTF("/models/BeeV3.glb");
 	const { actions } = useAnimations(animations, beeRef);
-	const normalMap = useTexture("/models/bee/textures/gltf_embedded_0.png");
+	// const normalMap = useTexture("/models/bee/textures/gltf_embedded_0.png");
 
-	scene.traverse((child) => {
-		if (child.isMesh) {
-			// Convert to light-reactive material
-			child.material = new THREE.MeshStandardMaterial({
-				map: normalMap,
-			});
-		}
-	});
+	// scene.traverse((child) => {
+	// 	if (child.isMesh) {
+	// 		// Convert to light-reactive material
+	// 		child.material = new THREE.MeshStandardMaterial({
+	// 			map: normalMap,
+	// 		});
+	// 	}
+	// });
 
 	// start animation
 	useEffect(() => {
+		console.log({scene})
+		scene.traverse((child) => {
+			if (child.isMesh && child.material.isMeshStandardMaterial) {
+				console.log({child})
+				child.material.metalness = 0.6;
+				child.material.roughness = 0.6;
+			}
+		})
 		if (actions && animations.length > 1) {
-			const anim = actions[animations[1].name];
+			const anim = actions[animations[0].name];
 			anim?.reset().fadeIn(0.5).play();
 		}
 	}, [actions, animations]);
@@ -41,8 +71,8 @@ function HiveXperience() {
 	return (
 		<group ref={groupRef} >
 			{/* normal light */}
-			<directionalLight position={[0, 0, 10]} intensity={1} color="#fff" />
-			<ambientLight intensity={1} color="#fff" />
+			<directionalLight position={[0, 2, 5]} intensity={3} color="#fff" />
+			<ambientLight intensity={5} color="#fff" />
 			<HiveBee />
 		</group>
 	);

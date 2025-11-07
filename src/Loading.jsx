@@ -131,7 +131,7 @@ export default function LoadingPage({ onStart }) {
 			}`}
 		>
 			<div className="flex flex-col w-full justify-center items-center gap-8 ">
-				<img src="/logo/DarkLogo.png" alt="LDS Logo" className={`w-[480px] ${visible ? "scale-100" : "scale-220 md:scale-200 translate-y-33 md:translate-y-25"} transition-all duration-1000 ease-in`} />
+				{/* <img src="/logo/DarkLogo.png" alt="LDS Logo" className={`w-[480px] ${visible ? "scale-100" : "scale-220 md:scale-200 translate-y-33 md:translate-y-25"} transition-all duration-1000 ease-in`} /> */}
 
 				<button
 					onClick={handleStart}

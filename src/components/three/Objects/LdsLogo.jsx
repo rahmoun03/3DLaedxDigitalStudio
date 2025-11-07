@@ -7,11 +7,75 @@ import RingCylinder from '@/components/three/Objects/RingCylinder';
 import AnimatedCurveLine from '@/components/three/Objects/AnimatedCurveLine';
 import HoloLight from '@/components/three/HoloLight';
 
-import fontUrl from '@/assets/fonts/Inter_Bold.json';
-// import fontUrl from '@/assets/fonts/Audiowide-Regular.json';
+// import fontUrl from '@/assets/fonts/Inter_Bold.json';
+import fontUrl from '@/assets/fonts/Audiowide_Regular.json';
 // import ttfFont from '@/assets/fonts/Audiowide/Audiowide-Regular.ttf';
 
+
+
+const Title = () => {
+	return (
+		<group position={[0, -1.5, 0]} rotation={[0, 0, 0]} >
+			<Center position={[0, 0, 0]}>
+				<Text3D font={fontUrl} lineHeight={0.5}  letterSpacing={0.1} size={0.6} height={0.03}>
+					LAEDX
+					<HolographicMaterial
+						side="FrontSide"
+						scanlineSize={10.0}
+						hologramColor="#51a4de"
+						hologramOpacity={0.9}
+						fresnelOpacity={0.4}
+						hologramBrightness={1.2}
+						signalSpeed={0.45}
+						fresnelAmount={0.45}
+						alphaMap={null}
+					/>
+				</Text3D>
+			</Center>
+
+			<Center  position={[0, -0.5, 0]}>					
+				<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.1}size={0.17} height={0.03}>
+					DIGITAL  STUDIO
+					<HolographicMaterial
+						side="FrontSide"
+						scanlineSize={10.0}
+						hologramColor="#51a4de"
+						hologramOpacity={0.9}
+						fresnelOpacity={0.4}
+						hologramBrightness={1.2}
+						signalSpeed={0.45}
+						fresnelAmount={0.45}
+						alphaMap={null}
+					/>
+				</Text3D>
+			</Center>
+
+			<Center position={[0, -.8, 0]}>
+				<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.05} size={0.09} height={0.03}  >
+					LEAD TOGETHER
+					<HolographicMaterial
+						side="FrontSide"
+						scanlineSize={10.0}
+						hologramColor="#51a4de"
+						hologramOpacity={0.9}
+						fresnelOpacity={0.4}
+						hologramBrightness={1.2}
+						signalSpeed={0.45}
+						fresnelAmount={0.45}
+						alphaMap={null}
+					/>
+				</Text3D>
+			</Center>
+		</group>
+	)
+}
+
 export default async function LdsLogo() {
+	// const loader = new THREE.FontLoader();
+	// loader.load('/public/fonts/Audiowide-Regular.json', function (font) {
+	// 	console.log(font);
+	// })
+
 
 	const groupRef = useRef();
 	const texture = useTexture("/textures/worldmap/alpha.jpg");
@@ -70,115 +134,80 @@ export default async function LdsLogo() {
 
 	return (
 		<RigidBody type="fixed" colliders="ball" restitution={0.9} friction={0.4}>
-			<group rotation={[0.7, 0.1, 0]} ref={groupRef}>
-				{/* shadow of projection */}
-				{/* <mesh position={ProjectorPosition} quaternion={ProjectionQuaternion}> */}
-					{/* <cylinderGeometry args={[0.01, sphereRadius, 5, 64]} /> */}
-					{/* <meshBasicMaterial color="#51a4de" side={THREE.DoubleSide} transparent opacity={0.02} wireframe/> */}
-					{/* <HolographicMaterial
-							side="BackSide"
-							scanlineSize={3.0}
-							hologramColor="#51a4de"
-							hologramOpacity={0.4}
-							fresnelOpacity={0.4}
-							hologramBrightness={0.4}
-							signalSpeed={0.45}
-							fresnelAmount={0.45}
-							// alphaMap={texture}
-					/> */}
-				{/* </mesh> */}
-				{/* Global center ring */} 
-				<mesh position={position} quaternion={quaternion}>
-					<cylinderGeometry args={[0.06, 0.06, cylinderLength, 32]} />
-					<meshBasicMaterial color="#ff5500" side={2} transparent opacity={0.8} />
-				</mesh>
+			<group position={[0, 0.5, 0]} rotation={[0, 0, 0]} ref={groupRef}>
 
-				<mesh position={position} quaternion={quaternion}>
-					<cylinderGeometry args={[0.03, 0.03, cylinderLength + 0.001, 32]} />
-					<meshBasicMaterial color="#bfced9" side={2} transparent opacity={0.9} />
-				</mesh>
-
-				{/* Local rings */}
-				{rings.map((ring, i) => (
-					<RingCylinder
-						key={i}
-						label={ring.label}
-						direction={ring.dir}
-						color1="#d0ad80"
-						color2="#bfced9"
-					/>
-				))}
-
-				{/* Sphere */}
-				<group rotation={[-0.7, 4.6, 0]} >
-					<mesh>
-						<sphereGeometry args={[sphereRadius, 64, 64]} />
-						<HolographicMaterial
-							side="DoubleSide"
-							scanlineSize={10.0}
-							hologramColor="#51a4de"
-							hologramOpacity={0.9}
-							fresnelOpacity={0.9}
-							hologramBrightness={1.0}
-							signalSpeed={0.45}
-							fresnelAmount={0.45}
-							alphaMap={texture}
-						/>
+				<group rotation={[0.7, 0, 0]}>
+					{/* Global center ring */} 
+					<mesh position={position} quaternion={quaternion}>
+						<cylinderGeometry args={[0.06, 0.06, cylinderLength, 32]} />
+						<meshBasicMaterial color="#ff5500" side={2} transparent opacity={0.8} />
+					</mesh>
+					<mesh position={position} quaternion={quaternion}>
+						<cylinderGeometry args={[0.03, 0.03, cylinderLength + 0.001, 32]} />
+						<meshBasicMaterial color="#bfced9" side={2} transparent opacity={0.9} />
 					</mesh>
 
-					<mesh>
-						<sphereGeometry args={[sphereRadius, 64, 64]} />
-						<HolographicMaterial
-							side="DoubleSide"
-							scanlineSize={10.0}
-							hologramColor="#51a4de"
-							hologramOpacity={0.4}
-							fresnelOpacity={0.4}
-							hologramBrightness={1.2}
-							signalSpeed={0.45}
-							fresnelAmount={0.45}
-							alphaMap={null}
-						/>
-					</mesh>
-				</group>
-
-				{/* Animated curved lines */}
-				{rings.map((ring, i) => {
-					const end = new THREE.Vector3(...ring.dir).normalize().multiplyScalar(1);
-					return (
-						<AnimatedCurveLine
+					{/* Local rings */}
+					{rings.map((ring, i) => (
+						<RingCylinder
 							key={i}
-							start={position}
-							end={end}
-							color="#d0ad80"
-							curvature={0.4}
-							thickness={0.01}
-							speed={0.5}
+							label={ring.label}
+							direction={ring.dir}
+							color1="#d0ad80"
+							color2="#bfced9"
 						/>
-					);
-				})}
-				<group position={[0, -1.5, 0]}>
-					<Center position={[0, 0, 0]}>
-						<Text3D font={fontUrl} lineHeight={0.5}  letterSpacing={0.3} size={0.5} >
-							LAEDX
-							<meshNormalMaterial />
-						</Text3D>
-					</Center>
+					))}
 
-					<Center  position={[0, -0.5, 0]}>					
-						<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.09}size={0.2} >
-							DIGITAL  STUDIO
-							<meshNormalMaterial />
-						</Text3D>
-					</Center>
+					{/* Sphere */}
+					<group rotation={[-0.7, 4.6, 0]} >
+						<mesh>
+							<sphereGeometry args={[sphereRadius, 64, 64]} />
+							<HolographicMaterial
+								side="DoubleSide"
+								scanlineSize={10.0}
+								hologramColor="#51a4de"
+								hologramOpacity={0.9}
+								fresnelOpacity={0.9}
+								hologramBrightness={1.0}
+								signalSpeed={0.45}
+								fresnelAmount={0.45}
+								alphaMap={texture}
+							/>
+						</mesh>
 
-					<Center position={[0, -.8, 0]}>
-						<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.05} size={0.1} >
-							LEAD TOGETHER
-							<meshNormalMaterial />
-						</Text3D>
-					</Center>
+						<mesh>
+							<sphereGeometry args={[sphereRadius, 64, 64]} />
+							<HolographicMaterial
+								side="DoubleSide"
+								scanlineSize={10.0}
+								hologramColor="#51a4de"
+								hologramOpacity={0.4}
+								fresnelOpacity={0.4}
+								hologramBrightness={1.2}
+								signalSpeed={0.45}
+								fresnelAmount={0.45}
+								alphaMap={null}
+							/>
+						</mesh>
+					</group>
+
+					{/* Animated curved lines */}
+					{rings.map((ring, i) => {
+						const end = new THREE.Vector3(...ring.dir).normalize().multiplyScalar(1);
+						return (
+							<AnimatedCurveLine
+								key={i}
+								start={position}
+								end={end}
+								color="#d0ad80"
+								curvature={0.4}
+								thickness={0.01}
+								speed={0.5}
+							/>
+						);
+					})}
 				</group>
+				<Title />
 				<HoloLight />
 			</group>
 		</RigidBody>
