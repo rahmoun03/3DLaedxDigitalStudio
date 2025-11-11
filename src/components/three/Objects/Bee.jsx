@@ -8,8 +8,8 @@ import { RigidBody } from '@react-three/rapier'
 export default function Bee(props) {
 	console.log("Bee mounted once");
 
-	const { scene, animations} = useGLTF("/models/bee/source/Bee.glb");
-	const normalMap = useTexture("/models/bee/textures/gltf_embedded_0.png");
+	const { scene, animations} = useGLTF("/models/BeeV3.glb");
+	// const normalMap = useTexture("/models/bee/textures/gltf_embedded_0.png");
 
 	const { camera } = useThree();
 	const { progressRightRef } = useProgressStore();
@@ -38,16 +38,17 @@ export default function Bee(props) {
 	);
 
 	useEffect(() => {
-		if (actions && animations.length > 1) {
-			const anim = actions[animations[1].name];
-			anim?.reset().fadeIn(0.5).play();
-		}
-		
 		scene.traverse((child) => {
-			if (child.isMesh) {
-				child.material.map = normalMap;
+			if (child.isMesh && child.material.isMeshStandardMaterial) {
+				console.log({child})
+				child.material.metalness = 0.6;
+				child.material.roughness = 0.6;
 			}
 		})
+		if (actions && animations.length > 1) {
+			const anim = actions[animations[0].name];
+			anim?.reset().fadeIn(0.5).play();
+		}
 	}, [actions, animations]);
 
 	

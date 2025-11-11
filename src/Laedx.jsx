@@ -34,15 +34,15 @@ export function ResponsiveCamera() {
 		// Example: Adjust camera position or FOV based on width
 		if (size.width < 768) {
 			// Mobile
-			camera.position.set(0, 0, 5);
-			camera.fov = 60;
+			// camera.position.set(0, 0, 5);
+			camera.fov = 75;
 		} else if (size.width < 1280) {
 			// Tablet
-			camera.position.set(0, 0, 5);
+			// camera.position.set(0, 0, 5);
 			camera.fov = 55;
 		} else {
 			// Desktop
-			camera.position.set(0, 0, 5);
+			// camera.position.set(0, 0, 5);
 			camera.fov = 55;
 		}
 

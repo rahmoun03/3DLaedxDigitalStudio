@@ -5,8 +5,8 @@ import * as THREE from 'three'
 import { AudioLoader } from "three";
 import { Physics } from "@react-three/rapier";
 import { RigidBody } from "@react-three/rapier";
-import { Bloom } from '@react-three/postprocessing'
-import { EffectComposer } from '@react-three/postprocessing'
+// import { Bloom } from '@react-three/postprocessing'
+// import { EffectComposer } from '@react-three/postprocessing'
 // import { BlurPass, Resizer, KernelSize, Resolution } from 'postprocessing'
 
 

@@ -200,10 +200,10 @@ export default function HolographicMaterial({
 			key={HolographicMaterial.key}
 			side={
 				side === "DoubleSide"
-				? DoubleSide
+				? "DoubleSide"
 				: side === "BackSide"
-				? BackSide
-				: FrontSide
+				? "BackSide"
+				: "FrontSide"
 			}
 			transparent
 			blending={enableAdditive ? AdditiveBlending : NormalBlending}

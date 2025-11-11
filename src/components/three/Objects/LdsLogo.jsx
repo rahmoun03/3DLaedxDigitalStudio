@@ -1,6 +1,6 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { RigidBody } from "@react-three/rapier";
-import { useTexture, Center, Text3D } from "@react-three/drei";
+import { useTexture, Center, Text3D, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
 import RingCylinder from '@/components/three/Objects/RingCylinder';
@@ -14,10 +14,44 @@ import fontUrl from '@/assets/fonts/Audiowide_Regular.json';
 
 
 const Title = () => {
+
+	const { scene } = useGLTF("/models/X.glb");
+
+	// const holo = useMemo(() => {
+		// const mat = new HolographicMaterial({
+		// 	side : "FrontSide",
+		// 	scanlineSize : 10.0,
+		// 	hologramColor : "#51a4de",
+		// 	hologramOpacity : 0.9,
+		// 	fresnelOpacity : 0.4,
+		// 	hologramBrightness : 2.2,
+		// 	signalSpeed : 0.45,
+		// 	fresnelAmount : 0.45,
+		// 	alphaMap : null
+		// })
+	// 	return mat
+	// }, [])
+
+	useEffect(() => {
+		console.log(scene)
+		scene.traverse((child) => {
+			if(child.isMesh && child.name !== "Orange_part"){
+				
+				console.log({child})
+				child.material.visible = false;
+			}
+			else
+			{
+				child.material = new THREE.MeshStandardMaterial({color : "#ff5500", emissive : "#ff5500", side : THREE.FrontSide, transparent : true, opacity: 0.9})
+			}
+		})
+	}, [scene])
+
+
 	return (
 		<group position={[0, -1.5, 0]} rotation={[0, 0, 0]} >
 			<Center position={[0, 0, 0]}>
-				<Text3D font={fontUrl} lineHeight={0.5}  letterSpacing={0.1} size={0.6} height={0.03}>
+				<Text3D font={fontUrl} lineHeight={0.5}  letterSpacing={0.1} size={0.6} height={0.06}>
 					LAEDX
 					<HolographicMaterial
 						side="FrontSide"
@@ -25,16 +59,18 @@ const Title = () => {
 						hologramColor="#51a4de"
 						hologramOpacity={0.9}
 						fresnelOpacity={0.4}
-						hologramBrightness={1.2}
+						hologramBrightness={2.2}
 						signalSpeed={0.45}
 						fresnelAmount={0.45}
 						alphaMap={null}
 					/>
 				</Text3D>
+				{/* <primitive object={scene} scale={[.52, .53, .8]} position={[3.352, -0.002, 0.001]} /> */}
+				<primitive object={scene} scale={[.52, .53, 1.64]} position={[3.352, -0.002, -0.0001]} />
 			</Center>
 
 			<Center  position={[0, -0.5, 0]}>					
-				<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.1}size={0.17} height={0.03}>
+				<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.1}size={0.17} height={0.06}>
 					DIGITAL  STUDIO
 					<HolographicMaterial
 						side="FrontSide"
@@ -42,7 +78,7 @@ const Title = () => {
 						hologramColor="#51a4de"
 						hologramOpacity={0.9}
 						fresnelOpacity={0.4}
-						hologramBrightness={1.2}
+						hologramBrightness={2.2}
 						signalSpeed={0.45}
 						fresnelAmount={0.45}
 						alphaMap={null}
@@ -51,7 +87,7 @@ const Title = () => {
 			</Center>
 
 			<Center position={[0, -.8, 0]}>
-				<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.05} size={0.09} height={0.03}  >
+				<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.05} size={0.09} height={0.06}  >
 					LEAD TOGETHER
 					<HolographicMaterial
 						side="FrontSide"
@@ -59,7 +95,7 @@ const Title = () => {
 						hologramColor="#51a4de"
 						hologramOpacity={0.9}
 						fresnelOpacity={0.4}
-						hologramBrightness={1.2}
+						hologramBrightness={2.2}
 						signalSpeed={0.45}
 						fresnelAmount={0.45}
 						alphaMap={null}
@@ -70,7 +106,7 @@ const Title = () => {
 	)
 }
 
-export default async function LdsLogo() {
+export default function LdsLogo() {
 	// const loader = new THREE.FontLoader();
 	// loader.load('/public/fonts/Audiowide-Regular.json', function (font) {
 	// 	console.log(font);
@@ -132,8 +168,13 @@ export default async function LdsLogo() {
 		{ dir: [0.5, 1.3, 1], label: "Palestine" },
 	];
 
+
+	useEffect(() => {
+		console.log('LdsLogo call useEffect')
+	}, [])
+
 	return (
-		<RigidBody type="fixed" colliders="ball" restitution={0.9} friction={0.4}>
+		// <RigidBody type="fixed" colliders="ball" restitution={0.9} friction={0.4}>
 			<group position={[0, 0.5, 0]} rotation={[0, 0, 0]} ref={groupRef}>
 
 				<group rotation={[0.7, 0, 0]}>
@@ -210,6 +251,6 @@ export default async function LdsLogo() {
 				<Title />
 				<HoloLight />
 			</group>
-		</RigidBody>
+		// </RigidBody>
 	);
 }

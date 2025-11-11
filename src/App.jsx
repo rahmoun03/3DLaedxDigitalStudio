@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { Canvas , useLoader} from "@react-three/fiber";
 import { Helper, useGLTF, useTexture } from "@react-three/drei";
@@ -20,6 +20,7 @@ import LoadingPage from "./Loading";
 import { ResponsiveCamera, Lights, LoaderBridge } from "./Laedx";
 import ScrollSwipeProgress from "@/components/ui/ScrollProgress";
 import SciFiLoader from "@/components/ui/SciFiLoader";
+
 
 function App() {
 	useGLTF.preload("/models/bee/source/Bee.glb");
@@ -58,9 +59,9 @@ function App() {
 									<LoaderBridge />
 									<Lights />
 									<OrbitControls />
-									{started && (
+									{/* {started && ( */}
 										<HomeScene />
-									)}
+									{/* )} */}
 									{/* <Stats /> */}
 									{/* helper */}
 									{/* <axesHelper /> */}

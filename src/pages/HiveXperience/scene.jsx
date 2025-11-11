@@ -31,16 +31,7 @@ const HiveBee = () => {
 	const beeRef = useRef();
 	const { scene, animations} = useGLTF("/models/BeeV3.glb");
 	const { actions } = useAnimations(animations, beeRef);
-	// const normalMap = useTexture("/models/bee/textures/gltf_embedded_0.png");
 
-	// scene.traverse((child) => {
-	// 	if (child.isMesh) {
-	// 		// Convert to light-reactive material
-	// 		child.material = new THREE.MeshStandardMaterial({
-	// 			map: normalMap,
-	// 		});
-	// 	}
-	// });
 
 	// start animation
 	useEffect(() => {
