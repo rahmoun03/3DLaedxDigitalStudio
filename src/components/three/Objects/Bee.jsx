@@ -8,7 +8,7 @@ import { RigidBody } from '@react-three/rapier'
 export default function Bee(props) {
 	console.log("Bee mounted once");
 
-	const { scene, animations} = useGLTF("/models/BeeV3.glb");
+	const { scene, animations} = useGLTF("/models/OpBeeV3.glb");
 	// const normalMap = useTexture("/models/bee/textures/gltf_embedded_0.png");
 
 	const { camera } = useThree();

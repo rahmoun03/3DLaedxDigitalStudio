@@ -23,14 +23,17 @@ import SciFiLoader from "@/components/ui/SciFiLoader";
 
 
 function App() {
-	useGLTF.preload("/models/bee/source/Bee.glb");
+	// useGLTF.preload("/models/bee/source/Bee.glb");
 	useTexture.preload("/textures/worldmap/alpha.jpg");
-	useTexture.preload("/models/bee/textures/gltf_embedded_0.png");
+	// useTexture.preload("/models/bee/textures/gltf_embedded_0.png");
 	useLoader(AudioLoader, '/sounds/bee-flying.mp3');
 	useLoader(AudioLoader, "/sounds/stone.wav");
 	useLoader(AudioLoader, '/sounds/buzz.mp3');
 	useLoader(AudioLoader, "/sounds/spacecraft.mp3");
-	useGLTF.preload("/models/small_rock.glb");
+	useGLTF.preload("/models/Opsmall_rock.glb");
+	useGLTF.preload("/models/OpX.glb");
+	useGLTF.preload("/models/hologram_projector.glb");
+	useGLTF.preload("/models/OpBeeV3.glb");
 
 	const [started, setStarted] = useState(false);
 

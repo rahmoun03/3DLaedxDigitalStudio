@@ -1,5 +1,6 @@
 import { useRef, useMemo, useEffect } from "react";
 import { RigidBody } from "@react-three/rapier";
+import { useFrame } from "@react-three/fiber";
 import { useTexture, Center, Text3D, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
@@ -9,13 +10,51 @@ import HoloLight from '@/components/three/HoloLight';
 
 // import fontUrl from '@/assets/fonts/Inter_Bold.json';
 import fontUrl from '@/assets/fonts/Audiowide_Regular.json';
+import { alpha } from "framer-motion";
 // import ttfFont from '@/assets/fonts/Audiowide/Audiowide-Regular.ttf';
+
+
+
+function ProjectionLight({
+  position = [0, -3, 0],
+}) {
+
+	const alphaLight = useTexture('/textures/Light/alphaLight.jpeg');
+
+  return (
+    <group position={position}>
+		<mesh >
+			<planeGeometry args={[15, 4]} rotation={[Math.PI / 2, Math.PI / 2, 0]} />
+			{/* <cylinderGeometry args={[3, .1, 1.5, 64]} /> */}
+			<meshLambertMaterial 
+				transparent={true}
+				opacity={0.9}
+				color="#51a4de"
+				alphaMap={alphaLight}
+				side={2}
+			/>
+			{/* <HolographicMaterial
+				side="BackSide"
+				scanlineSize={10.0}
+				hologramColor="#51a4de"
+				hologramOpacity={0.5}
+				fresnelOpacity={0.2}
+				hologramBrightness={2.2}
+				signalSpeed={0.45}
+				fresnelAmount={0.45}
+				alphaMap={alphaLight}
+			/> */}
+		</mesh>
+    </group>
+  );
+}
 
 
 
 const Title = () => {
 
-	const { scene } = useGLTF("/models/X.glb");
+	const { scene } = useGLTF("/models/OpX.glb");
+
 
 	// const holo = useMemo(() => {
 		// const mat = new HolographicMaterial({
@@ -111,6 +150,16 @@ export default function LdsLogo() {
 	// loader.load('/public/fonts/Audiowide-Regular.json', function (font) {
 	// 	console.log(font);
 	// })
+	const { scene } = useGLTF("/models/hologram_projector.glb");
+	console.log("projector : ", scene)
+	useEffect(() => {
+		scene.traverse((child) => {
+			if (child.name === 'Sphere001' || child.name === 'Sphere002' || child.name === 'Cylinder008') {
+				console.log("OK OK OK OK OK OK OK OK")
+				child.visible = false;
+			}
+		})
+	}, [])
 
 
 	const groupRef = useRef();
@@ -177,6 +226,16 @@ export default function LdsLogo() {
 		// <RigidBody type="fixed" colliders="ball" restitution={0.9} friction={0.4}>
 			<group position={[0, 0.5, 0]} rotation={[0, 0, 0]} ref={groupRef}>
 
+				<group position={[0, -3.5, -.25]}>
+					<RigidBody type="fixed" colliders="hull" restitution={0.9} friction={0.4}>
+						<primitive object={scene} scale={[0.03, 0.03, 0.03]} />
+					</RigidBody>
+					<ProjectionLight 
+						position={[0.05, 2.5, .25]}
+					/>
+				</group>
+				
+				
 				<group rotation={[0.7, 0, 0]}>
 					{/* Global center ring */} 
 					<mesh position={position} quaternion={quaternion}>
@@ -204,7 +263,7 @@ export default function LdsLogo() {
 						<mesh>
 							<sphereGeometry args={[sphereRadius, 64, 64]} />
 							<HolographicMaterial
-								side="DoubleSide"
+								side="BackSide"
 								scanlineSize={10.0}
 								hologramColor="#51a4de"
 								hologramOpacity={0.9}
@@ -249,7 +308,7 @@ export default function LdsLogo() {
 					})}
 				</group>
 				<Title />
-				<HoloLight />
+				<HoloLight position={[0, -2.5, 0]} />
 			</group>
 		// </RigidBody>
 	);

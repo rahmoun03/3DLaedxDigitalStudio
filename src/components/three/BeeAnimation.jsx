@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { useProgressStore } from "../../hooks/useProgressStore";
 
 export default function BeeGroup() {
-	const { scene, animations } = useGLTF("/models/bee/source/Bee.glb");
+	const { scene, animations } = useGLTF("/models/OpBeeV3.glb");
 
 	const direction = {
 		left : [0, 3 * Math.PI / 2, 0],

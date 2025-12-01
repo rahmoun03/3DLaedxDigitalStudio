@@ -29,7 +29,7 @@ function convertStandardToPhysical(stdMat) {
 const HiveBee = () => {
 	const groupRef = useRef();
 	const beeRef = useRef();
-	const { scene, animations} = useGLTF("/models/BeeV3.glb");
+	const { scene, animations} = useGLTF("/models/OpBeeV3.glb");
 	const { actions } = useAnimations(animations, beeRef);
 
 

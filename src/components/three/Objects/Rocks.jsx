@@ -6,7 +6,7 @@ import * as THREE from "three";
 import useShake from "@/hooks/useShake";
 
 export default function Rocks({ rockCount = 15, radius = 2.5 }) {
-	const { scene } = useGLTF("/models/small_rock.glb");
+	const { scene } = useGLTF("/models/Opsmall_rock.glb");
 	const groupRef = useRef();
 	const rockRefs = useRef([]);
 

@@ -1,6 +1,6 @@
 import { useRef, useEffect, useMemo } from "react";
 import { useFrame, useThree, useLoader} from "@react-three/fiber";
-import { useTexture } from '@react-three/drei';
+import { useTexture, Stars } from '@react-three/drei';
 import * as THREE from 'three'
 import { AudioLoader } from "three";
 import { Physics } from "@react-three/rapier";
@@ -232,7 +232,7 @@ function HomeScene() {
 				<LdsLogo />
 				<Bee scale={[0.02, 0.02, 0.02]} position={[0, 0, -3]}/>
 				<Rocks rockCount={60} radius={1.5} />
-
+				<Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
 			</Physics>
 
 			  {/* <Bloom
