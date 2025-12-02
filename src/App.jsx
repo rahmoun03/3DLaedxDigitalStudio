@@ -65,7 +65,7 @@ function App() {
 									{/* {started && ( */}
 										<HomeScene />
 									{/* )} */}
-									{/* <Stats /> */}
+									<Stats />
 									{/* helper */}
 									{/* <axesHelper /> */}
 									{/* <gridHelper /> */}

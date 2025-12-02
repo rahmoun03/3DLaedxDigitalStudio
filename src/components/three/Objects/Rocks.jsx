@@ -31,7 +31,7 @@ export default function Rocks({ rockCount = 15, radius = 2.5 }) {
 			const x = radius * Math.sin(phi) * Math.cos(theta);
 			const y = radius * Math.sin(phi) * Math.sin(theta);
 			const z = radius * Math.cos(phi);
-			if (z >= 0.1) continue;
+			if (z >= 0) continue;
 			arr.push({
 				position: [x, y, z],
 				rotation: [

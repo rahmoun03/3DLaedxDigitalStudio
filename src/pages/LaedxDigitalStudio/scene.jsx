@@ -9,7 +9,7 @@ import { RigidBody } from "@react-three/rapier";
 // import { EffectComposer } from '@react-three/postprocessing'
 // import { BlurPass, Resizer, KernelSize, Resolution } from 'postprocessing'
 
-
+import Ground from '@/components/three/Ground';
 import Bee from '@/components/three/Objects/Bee';
 import Rocks from '@/components/three/Objects/Rocks';
 import RingCylinder from '@/components/three/Objects/RingCylinder';
@@ -233,6 +233,7 @@ function HomeScene() {
 				<Bee scale={[0.02, 0.02, 0.02]} position={[0, 0, -3]}/>
 				<Rocks rockCount={60} radius={1.5} />
 				<Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+				<Ground />
 			</Physics>
 
 			  {/* <Bloom
