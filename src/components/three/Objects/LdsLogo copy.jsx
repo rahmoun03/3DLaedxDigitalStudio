@@ -7,7 +7,9 @@ import { AdditiveBlending, NormalBlending, SubtractiveBlending, MultiplyBlending
 
 
 
-import HolographicMaterial from '@/components/three/materials/hologramMat';
+import holographicVertexShader from '@/assets/shaders/holographic/vertex.glsl';
+import holographicFragmentShader from '@/assets/shaders/holographic/fragment.glsl';
+import HolographicMaterial from '@/components/three/materials/HolographicMaterial';
 import RingCylinder from '@/components/three/Objects/RingCylinder';
 import AnimatedCurveLine from '@/components/three/Objects/AnimatedCurveLine';
 import HoloLight from '@/components/three/HoloLight';
@@ -32,7 +34,7 @@ function ProjectionLight({
 			{/* <cylinderGeometry args={[3, .1, 1.5, 64]} /> */}
 			<meshMatcapMaterial
 				transparent={true}
-				opacity={0.4}
+				opacity={0.3}
 				color="#51a4de"
 				alphaMap={alphaLight}
 				side={THREE.DoubleSide}
@@ -40,6 +42,17 @@ function ProjectionLight({
 				premultipliedAlpha={true}
 				blending={THREE.AdditiveBlending}
 			/>
+			{/* <HolographicMaterial
+				side="BackSide"
+				scanlineSize={10.0}
+				hologramColor="#51a4de"
+				hologramOpacity={0.5}
+				fresnelOpacity={0.2}
+				hologramBrightness={2.2}
+				signalSpeed={0.45}
+				fresnelAmount={0.45}
+				alphaMap={alphaLight}
+			/> */}
 		</mesh>
     </group>
   );
@@ -51,6 +64,21 @@ const Title = () => {
 
 	const { scene } = useGLTF("/models/OpX.glb");
 	const titleRef = useRef();
+
+	// const holo = useMemo(() => {
+		// const mat = new HolographicMaterial({
+		// 	side : "FrontSide",
+		// 	scanlineSize : 10.0,
+		// 	hologramColor : "#51a4de",
+		// 	hologramOpacity : 0.9,
+		// 	fresnelOpacity : 0.4,
+		// 	hologramBrightness : 2.2,
+		// 	signalSpeed : 0.45,
+		// 	fresnelAmount : 0.45,
+		// 	alphaMap : null
+		// })
+	// 	return mat
+	// }, [])
 
 	useEffect(() => {
 		console.log(scene)
@@ -73,10 +101,10 @@ const Title = () => {
 	}
 
 	useFrame((state) => {
-		// if (titleRef.current) {
+		if (titleRef.current) {
 			uniforms.uTime.value = state.clock.elapsedTime;
 			// titleRef.current.rotation.y += 0.01;
-		// }
+		}
 	})
 
 
@@ -85,8 +113,27 @@ const Title = () => {
 			<Center position={[0, 0, 0]}>
 				<Text3D font={fontUrl} lineHeight={0.5}  letterSpacing={0.1} size={0.6} height={0.06}>
 					LAEDX
-					<HolographicMaterial color='#51a4de' />
-
+					<shaderMaterial 
+						// ref={sphereMaterialRef1}
+						vertexShader={holographicVertexShader}
+						fragmentShader={holographicFragmentShader}
+						uniforms={uniforms}
+						transparent
+						side={THREE.DoubleSide}
+						depthWrite={false}
+						blending={THREE.AdditiveBlending}
+					/>
+					{/* <HolographicMaterial
+						side="FrontSide"
+						scanlineSize={10.0}
+						hologramColor="#51a4de"
+						hologramOpacity={0.9}
+						fresnelOpacity={0.4}
+						hologramBrightness={2.2}
+						signalSpeed={0.45}
+						fresnelAmount={0.45}
+						alphaMap={null}
+					/> */}
 				</Text3D>
 				{/* <primitive object={scene} scale={[.52, .53, .8]} position={[3.352, -0.002, 0.001]} /> */}
 				{/* <primitive object={scene} scale={[.52, .53, 1.64]} position={[3.352, -0.002, -0.0001]} /> */}
@@ -95,9 +142,7 @@ const Title = () => {
 			<Center  position={[0, -0.5, 0]}>					
 				<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.1}size={0.17} height={0.06}>
 					DIGITAL  STUDIO
-					<HolographicMaterial color='#51a4de' />
-
-					{/* <shaderMaterial 
+					<shaderMaterial 
 						// ref={sphereMaterialRef1}
 						vertexShader={holographicVertexShader}
 						fragmentShader={holographicFragmentShader}
@@ -106,6 +151,17 @@ const Title = () => {
 						side={THREE.DoubleSide}
 						depthWrite={false}
 						blending={THREE.AdditiveBlending}
+					/>
+					{/* <HolographicMaterial
+						side="FrontSide"
+						scanlineSize={10.0}
+						hologramColor="#51a4de"
+						hologramOpacity={0.9}
+						fresnelOpacity={0.4}
+						hologramBrightness={2.2}
+						signalSpeed={0.45}
+						fresnelAmount={0.45}
+						alphaMap={null}
 					/> */}
 				</Text3D>
 			</Center>
@@ -113,9 +169,7 @@ const Title = () => {
 			<Center position={[0, -.8, 0]}>
 				<Text3D font={fontUrl} lineHeight={0.2} letterSpacing={0.05} size={0.09} height={0.06}  >
 					LEAD TOGETHER
-					<HolographicMaterial color='#51a4de' />
-
-					{/* <shaderMaterial 
+					<shaderMaterial 
 						// ref={sphereMaterialRef1}
 						vertexShader={holographicVertexShader}
 						fragmentShader={holographicFragmentShader}
@@ -124,6 +178,18 @@ const Title = () => {
 						side={THREE.DoubleSide}
 						depthWrite={false}
 						blending={THREE.AdditiveBlending}
+					/>
+
+					{/* <HolographicMaterial
+						side="FrontSide"
+						scanlineSize={10.0}
+						hologramColor="#51a4de"
+						hologramOpacity={0.9}
+						fresnelOpacity={0.4}
+						hologramBrightness={2.2}
+						signalSpeed={0.45}
+						fresnelAmount={0.45}
+						alphaMap={null}
 					/> */}
 				</Text3D>
 			</Center>
@@ -163,9 +229,21 @@ export default function LdsLogo() {
 
 	// Reference direction for the central cylinder
 	const direction = useMemo(
-		() => new THREE.Vector3(10.0, 2.0, 3.0).normalize(),
+		() => new THREE.Vector3(-0.4, 0.8, 0.6).normalize(),
 		[]
 	);
+	// const ProjectorDir = useMemo(
+	// 	() => new THREE.Vector3(0, -3, 2).normalize(),
+	// 	[]
+	// )
+
+	// const ProjectorPosition = useMemo(
+	// 	() =>
+	// 		ProjectorDir
+	// 			.clone()
+	// 			.multiplyScalar(sphereRadius + cylinderLength / 2 + offset + 1.5),
+	// 	[ProjectorDir]
+	// );
 
 
 	const position = useMemo(
@@ -181,14 +259,20 @@ export default function LdsLogo() {
 		q.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
 		return q;
 	}, [direction]);
+	
+	// const ProjectionQuaternion = useMemo(() => {
+	// 	const q = new THREE.Quaternion();
+	// 	q.setFromUnitVectors(new THREE.Vector3(0, 1, 0), ProjectorDir);
+	// 	return q;
+	// }, [ProjectorDir]);
 
 	// Ring data
 	const rings = [
-		{ dir: [8.0, -6.0, 10.0], label: "Brazil" },
-		{ dir: [8.0, 6.0, 1.0], label: "Europe" },
-		{ dir: [8.0, -8.0, -1.0], label: "South Africa" },
-		{ dir: [0.5, 1.3, 1], label: "Canada" },
-		{ dir: [8.0, 2.0, -4.0], label: "Palestine" },
+		{ dir: [-1.5, -0.5, 0.5], label: "Brazil" },
+		{ dir: [0, 1, 0], label: "Europe" },
+		{ dir: [0, 0, 1], label: "South Africa" },
+		{ dir: [-2.0, 1.5, -0.5], label: "Canada" },
+		{ dir: [0.5, 1.3, 1], label: "Palestine" },
 	];
 
 
@@ -205,17 +289,19 @@ export default function LdsLogo() {
 
 	// Animate uniforms
 	useFrame((state) => {
-		// if (sphereMaterialRef1.current ) {
+		if (sphereMaterialRef1.current ) {
 			uniforms.uTime.value = state.clock.elapsedTime;
 			// sphereMaterialRef2.current.uniforms.uTime.value = state.clock.elapsedTime;
 			// console.log("uTime : ", sphereMaterialRef1.current.uniforms.uTime);
 			completLogo.current.rotation.y += 0.01;
-		// }
+		}
 	})
 
 
 	return (
+		// <RigidBody type="fixed" colliders="ball" restitution={0.9} friction={0.4}>
 			<group position={[0, 0.5, 0]} rotation={[0, 0, 0]} ref={groupRef}>
+
 				<group position={[0, -3.2, -0.01]}>
 					<RigidBody type="fixed" colliders="hull" restitution={0.9} friction={0.4}>
 						<primitive object={scene} scale={[0.03, 0.03, 0.03]} />
@@ -237,64 +323,109 @@ export default function LdsLogo() {
 				
 				
 				<group rotation={[0, 0, 0]} ref={completLogo}>
-	
+					{/* Global center ring */} 
+					{/* <mesh position={position} quaternion={quaternion}>
+						<cylinderGeometry args={[0.06, 0.06, cylinderLength, 32]} />
+						<meshBasicMaterial color="#ff5500" side={2} transparent opacity={0.8} />
+					</mesh>
+					<mesh position={position} quaternion={quaternion}>
+						<cylinderGeometry args={[0.03, 0.03, cylinderLength + 0.001, 32]} />
+						<meshBasicMaterial color="#bfced9" side={2} transparent opacity={0.9} />
+					</mesh> */}
 
 
 
 					{/* Sphere */}
-					<group rotation={[0, 4.7, 0]} ref={sphereGroup}>
+					<group rotation={[0, 4.6, 0]} ref={sphereGroup}>
 						<mesh>
 							<sphereGeometry args={[sphereRadius, 64, 64]} />
-							<HolographicMaterial color='#51a4de' useTexture={true} texture={texture}  transparent />
-						</mesh>
-
-						<mesh>
-							<sphereGeometry args={[sphereRadius, 64, 64]} />
-							<HolographicMaterial color='#51a4de' intensity={1} />
-						</mesh>
-
-						{/* Global center ring */} 
-						<mesh position={position} quaternion={quaternion}>
-							<cylinderGeometry args={[0.06, 0.06, cylinderLength, 32]} />
-							{/* <HolographicMaterial color="#ff5500" /> */}
-							<meshBasicMaterial color="#ff5500" side={2} transparent opacity={0.3} blending={THREE.AdditiveBlending}/>
-						</mesh>
-						<mesh position={position} quaternion={quaternion}>
-							<cylinderGeometry args={[0.03, 0.03, cylinderLength + 0.001, 32]} />
-							<meshBasicMaterial color="#bfced9" side={2} transparent opacity={0.3} blending={THREE.AdditiveBlending} />
-						</mesh>
-
-						{/* Local rings */}
-						{rings.map((ring, i) => (
-							<RingCylinder
-								key={i}
-								label={ring.label}
-								direction={ring.dir}
-								color1="#d0ad80"
-								color2="#bfced9"
+							<shaderMaterial 
+								ref={sphereMaterialRef1}
+								vertexShader={holographicVertexShader}
+								fragmentShader={holographicFragmentShader}
+								uniforms={{
+									uTime : uniforms.uTime,
+									uColor: {value : new THREE.Color("#51a4de") },
+									uTexture: { value: texture },
+									// uNoise: { value: noise },
+								}}
+								transparent
+								side={THREE.DoubleSide}
+								depthWrite={false}
+								blending={THREE.AdditiveBlending}
 							/>
-						))}
 
-						{/* Animated curved lines */}
-						{/* {rings.map((ring, i) => {
-							const end = new THREE.Vector3(...ring.dir).normalize().multiplyScalar(1);
-							return (
-								<AnimatedCurveLine
-									key={i}
-									start={position}
-									end={end}
-									color="#d0ad80"
-									curvature={0.4}
-									thickness={0.01}
-									speed={0.5}
-								/>
-							);
-						})} */}
+							{/* <HolographicMaterial
+								side="BackSide"
+								scanlineSize={10.0}
+								hologramColor="#51a4de"
+								hologramOpacity={0.9}
+								fresnelOpacity={0.9}
+								hologramBrightness={1.0}
+								signalSpeed={0.45}
+								fresnelAmount={0.45}
+								alphaMap={texture}
+							/> */}
+						</mesh>
+
+						{/* <mesh>
+							<sphereGeometry args={[sphereRadius, 64, 64]} />
+
+							<shaderMaterial
+								ref={sphereMaterialRef2}
+								vertexShader={holographicVertexShader}
+								fragmentShader={holographicFragmentShader}
+								uniforms={{
+									uTime: {value : 0 },
+								}}
+								transparent
+							/>
+
+
+							<HolographicMaterial
+								side="DoubleSide"
+								scanlineSize={10.0}
+								hologramColor="#51a4de"
+								hologramOpacity={0.4}
+								fresnelOpacity={0.4}
+								hologramBrightness={1.2}
+								signalSpeed={0.45}
+								fresnelAmount={0.45}
+								alphaMap={null}
+							/>
+						</mesh> */}
 					</group>
 
+					{/* Local rings */}
+					{/* {rings.map((ring, i) => (
+						<RingCylinder
+							key={i}
+							label={ring.label}
+							direction={ring.dir}
+							color1="#d0ad80"
+							color2="#bfced9"
+						/>
+					))} */}
+
+					{/* Animated curved lines */}
+					{/* {rings.map((ring, i) => {
+						const end = new THREE.Vector3(...ring.dir).normalize().multiplyScalar(1);
+						return (
+							<AnimatedCurveLine
+								key={i}
+								start={position}
+								end={end}
+								color="#d0ad80"
+								curvature={0.4}
+								thickness={0.01}
+								speed={0.5}
+							/>
+						);
+					})} */}
 					<Title />
 				</group>
-				<HoloLight position={[0, -2.6, 0]} />
+				<HoloLight position={[0, -2.5, 0]} />
 			</group>
+		// </RigidBody>
 	);
 }

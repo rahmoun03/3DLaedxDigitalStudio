@@ -4,7 +4,8 @@ import { Canvas , useLoader} from "@react-three/fiber";
 import { Helper, useGLTF, useTexture } from "@react-three/drei";
 import { OrbitControls, Stats } from "@react-three/drei";
 import { AudioLoader } from "three";
-
+import { Fluid } from '@whatisjery/react-fluid-distortion';
+import { EffectComposer } from '@react-three/postprocessing';
 
 
 // pages
@@ -32,7 +33,7 @@ function App() {
 	useLoader(AudioLoader, "/sounds/spacecraft.mp3");
 	useGLTF.preload("/models/Opsmall_rock.glb");
 	useGLTF.preload("/models/OpX.glb");
-	useGLTF.preload("/models/hologram_projector.glb");
+	useGLTF.preload("/models/hologram_projector_optimized.glb");
 	useGLTF.preload("/models/OpBeeV3.glb");
 
 	const [started, setStarted] = useState(false);
@@ -48,7 +49,7 @@ function App() {
 					path='/'
 					element={
 						<>
-							{/* <ScrollSwipeProgress /> */}
+							<ScrollSwipeProgress />
 							<LoadingPage onStart={() => setStarted(true)} />
 							<Canvas
 								camera={{ position: [0, 0, 5], fov: 55 }}
@@ -61,14 +62,18 @@ function App() {
 									<ResponsiveCamera />
 									<LoaderBridge />
 									<Lights />
-									<OrbitControls />
+									{/* <OrbitControls /> */}
+									<HomeScene />
 									{/* {started && ( */}
-										<HomeScene />
 									{/* )} */}
-									<Stats />
+									{/* <Stats /> */}
 									{/* helper */}
 									{/* <axesHelper /> */}
 									{/* <gridHelper /> */}
+
+									{/* <EffectComposer>
+										<Fluid />
+									</EffectComposer> */}
 								</Suspense>
 							</Canvas>
 

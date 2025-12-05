@@ -5,7 +5,7 @@ import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import useShake from "@/hooks/useShake";
 
-export default function Rocks({ rockCount = 15, radius = 2.5 }) {
+export default function Rocks({ rockCount = 30, radius = 2.5 }) {
 	const { scene } = useGLTF("/models/Opsmall_rock.glb");
 	const groupRef = useRef();
 	const rockRefs = useRef([]);
@@ -31,7 +31,7 @@ export default function Rocks({ rockCount = 15, radius = 2.5 }) {
 			const x = radius * Math.sin(phi) * Math.cos(theta);
 			const y = radius * Math.sin(phi) * Math.sin(theta);
 			const z = radius * Math.cos(phi);
-			if (z >= 0) continue;
+			if (z >= 0 || y <= -2) continue;
 			arr.push({
 				position: [x, y, z],
 				rotation: [

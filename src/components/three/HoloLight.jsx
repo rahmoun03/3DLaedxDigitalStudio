@@ -30,7 +30,7 @@ export default function HoloLight({
     <pointLight
       ref={lightRef}
       position={position}
-      intensity={30}
+      intensity={2}
       color="#51a4de"
       distance={10}
     />

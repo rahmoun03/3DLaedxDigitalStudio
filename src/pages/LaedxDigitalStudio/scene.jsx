@@ -5,10 +5,14 @@ import * as THREE from 'three'
 import { AudioLoader } from "three";
 import { Physics } from "@react-three/rapier";
 import { RigidBody } from "@react-three/rapier";
-// import { Bloom } from '@react-three/postprocessing'
-// import { EffectComposer } from '@react-three/postprocessing'
+import { EffectComposer, DepthOfField } from "@react-three/postprocessing"
+import { DepthEffect, BlendFunction, EffectPass } from "postprocessing"
+import { useHelper } from '@react-three/drei';
+import { Box3Helper } from "three";
 // import { BlurPass, Resizer, KernelSize, Resolution } from 'postprocessing'
 
+
+import SmokeParticles  from "../../components/three/SmokeParticles";
 import Ground from '@/components/three/Ground';
 import Bee from '@/components/three/Objects/Bee';
 import Rocks from '@/components/three/Objects/Rocks';
@@ -44,6 +48,8 @@ function HoloLight() {
     />
   );
 }
+
+
 
 function Sphere() {
 	// Parameters
@@ -189,13 +195,15 @@ function HomeScene() {
 	const spacecraftSound = useLoader(AudioLoader, "/sounds/spacecraft.mp3");
 
 
+	const smokeRef = useRef();
+
 	useEffect(() => {
 		const audio = new THREE.PositionalAudio(listener);
 		audio.setBuffer(buzzSound);
 		audio.setRefDistance(1);
 		audio.setVolume(0.5);
 		audio.setLoop(true);
-		
+
 		// const audio2 = new THREE.PositionalAudio(listener);
 		// audio2.setBuffer(spacecraftSound);
 		// audio2.setRefDistance(1);
@@ -225,14 +233,20 @@ function HomeScene() {
 		camera.lookAt(0, 0, 0);
 	})
 
+
+  	// useHelper(smokeRef, Box3Helper, 1, 'red')
+
+	// const smokeColor = useMemo(() => new THREE.Color("white"), []);
+
 	return (
 		<group ref={groupRef}>
 			<Physics gravity={[0, 0, 0]}>
 				{/* <Sphere /> */}
 				<LdsLogo />
 				<Bee scale={[0.02, 0.02, 0.02]} position={[0, 0, -3]}/>
-				<Rocks rockCount={60} radius={1.5} />
+				<Rocks rockCount={60} radius={4.5} />
 				<Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+				<SmokeParticles count={800} ref={smokeRef} />
 				<Ground />
 			</Physics>
 
@@ -251,7 +265,7 @@ function HomeScene() {
 			{/* <Ground /> */}
 			{/* Post bloom for the hot rim */}
 			{/* <EffectComposer >
-				<Bloom intensity={0.01} luminanceThreshold={0.01} />
+				<Bloom intensity={0.1} luminanceThreshold={0.01} />
 			</EffectComposer> */}
 		</group>
 	);

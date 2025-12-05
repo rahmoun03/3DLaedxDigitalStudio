@@ -96,7 +96,7 @@ export default function RingCylinder({
 				onPointerOut={handleLeave}
 			>
 				<cylinderGeometry args={[0.2, 0.2, cylinderLength * 3 , 32]} />
-				<meshBasicMaterial transparent opacity={0.0} side={THREE.BackSide} />
+				<meshBasicMaterial transparent opacity={0.0} side={THREE.BackSide} 	blending={THREE.AdditiveBlending} />
 			</mesh>
 
 

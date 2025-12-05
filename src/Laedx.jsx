@@ -35,15 +35,15 @@ export function ResponsiveCamera() {
 		if (size.width < 768) {
 			// Mobile
 			// camera.position.set(0, 0, 5);
-			camera.fov = 75;
+			camera.fov = 85;
 		} else if (size.width < 1280) {
 			// Tablet
 			// camera.position.set(0, 0, 5);
-			camera.fov = 55;
+			camera.fov = 75;
 		} else {
 			// Desktop
 			// camera.position.set(0, 0, 5);
-			camera.fov = 55;
+			camera.fov = 75;
 		}
 
 		camera.updateProjectionMatrix();
